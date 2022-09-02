@@ -1,0 +1,17 @@
+{
+  "name": "algorithm-research",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx tsc && node dist"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.184",
+    "@types/node": "^18.7.14",
+    "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
