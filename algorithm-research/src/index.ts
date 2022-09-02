@@ -19,9 +19,8 @@ console.log(scaler.reverseTransform(datas));
 // 3. kmeans run
 const kmeans = new KMeans(datas);
 kmeans.setCentroids();
-do {
+for (let test of kmeans as any) {
   console.log(kmeans.ecv);
-  kmeans.next();
-} while (!kmeans.done);
+}
 
 console.log(kmeans.labels);

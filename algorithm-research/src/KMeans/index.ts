@@ -8,7 +8,7 @@ import {
   sumOfSqaured,
 } from "./utils";
 
-class KMeans {
+class KMeans implements Iterator<number[]> {
   datas: number[][];
   K: number;
 
@@ -21,6 +21,10 @@ class KMeans {
     this.datas = datas;
     this.K = Math.round(Math.sqrt(datas.length / 2));
     this.earlyStop = earlyStop;
+  }
+
+  [Symbol.iterator]() {
+    return this;
   }
 
   setCentroids() {
@@ -57,7 +61,10 @@ class KMeans {
     if (_.isEqual(this.centroids, newCentroids)) this.earlyStop--;
     this.centroids = newCentroids;
 
-    if (this.earlyStop === 0) this.done = true;
+    if (this.earlyStop === 0) {
+      return { value: this.labels, done: true };
+    }
+    return { value: this.labels, done: false };
   }
 
   get clusterSeparation() {
