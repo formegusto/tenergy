@@ -9,8 +9,8 @@ import { dbConnect } from "./TimeDivisionKMeans/models";
   const tdKMeans = new TimeDivisionKMeans(3);
 
   await tdKMeans.appendData();
-  console.log(tdKMeans.datas);
+  tdKMeans.next();
 
-  await tdKMeans.appendData();
-  console.log(tdKMeans.datas);
+  // await tdKMeans.appendData();
+  // tdKMeans.next();
 })();

@@ -1,4 +1,5 @@
 import _ from "lodash";
+import sorting from "./sorting";
 import {
   clusterSeparation,
   euclideanDistance,
@@ -62,6 +63,14 @@ class KMeans implements Iterator<number[]> {
     this.centroids = newCentroids;
 
     if (this.earlyStop === 0) {
+      // 끝났을 때, sorting 함수 붙여주기
+      this.sorting = () => {
+        const [labels, centroids] = sorting.call(this);
+
+        this.labels = labels;
+        this.centroids = centroids;
+      };
+
       return { value: this.labels, done: true };
     }
     return { value: this.labels, done: false };
@@ -90,6 +99,8 @@ class KMeans implements Iterator<number[]> {
   get ecv() {
     return (1 - this.wss / this.tss) * 100;
   }
+
+  sorting?: () => void;
 }
 
 export default KMeans;
