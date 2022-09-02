@@ -1,26 +1,16 @@
-import _ from "lodash";
-import KMeans from "./KMeans";
-import MinMaxScaler from "./MinMaxScaler";
+import dotenv from "dotenv";
+import TimeDivisionKMeans from "./TimeDivisionKMeans";
+import { dbConnect } from "./TimeDivisionKMeans/models";
 
-// 1. data setting
-const TESTSIZE = 50;
-const testArray = _.map(new Array(TESTSIZE), () => [
-  Math.floor(Math.random() * 100) + 1,
-  Math.floor(Math.random() * 100) + 1,
-]);
+(async function () {
+  dotenv.config();
+  await dbConnect();
 
-// 2. min - max scaling
-const scaler = new MinMaxScaler(testArray).fit();
-const datas = scaler.transfrom();
-console.log(testArray);
-console.log(datas);
-console.log(scaler.reverseTransform(datas));
+  const tdKMeans = new TimeDivisionKMeans(3);
 
-// 3. kmeans run
-const kmeans = new KMeans(datas);
-kmeans.setCentroids();
-for (let test of kmeans as any) {
-  console.log(kmeans.ecv);
-}
+  await tdKMeans.appendData();
+  tdKMeans.next();
 
-console.log(kmeans.labels);
+  // await tdKMeans.appendData();
+  // tdKMeans.next();
+})();
