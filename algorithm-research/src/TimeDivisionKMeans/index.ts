@@ -47,13 +47,14 @@ class TimeDivisionKMeans {
     if (kmeans.sorting) kmeans.sorting();
 
     // Adjusting 작업이 필요함 (여기서 파이썬 프로그램이 붙어주면 됨)
-    const decisionTreeProcess = spawnSync("python3", [
-      "python",
-      '[{"test":1}]',
-    ]);
+    if (kmeans.adjust) kmeans.adjust();
+    // const decisionTreeProcess = spawnSync("python3", [
+    //   "python",
+    //   '[{"test":1}]',
+    // ]);
 
-    console.log(decisionTreeProcess.stdout.toString());
-    console.log(decisionTreeProcess.stderr.toString());
+    // console.log(decisionTreeProcess.stdout.toString());
+    // console.log(decisionTreeProcess.stderr.toString());
   }
 }
 

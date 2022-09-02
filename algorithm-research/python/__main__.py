@@ -1,9 +1,14 @@
 import sys
 import json
+from sklearn.tree import DecisionTreeClassifier as DTC
 
 if __name__ == "__main__":
     train_datas = sys.argv[1]
-
-    print(train_datas)
     data = json.loads(train_datas)
-    print(data[0])
+    train_X, train_Y, pred_X, pred_Y = data
+
+    dtc = DTC()
+    dtc.fit(train_X, train_Y)
+    predict_labels = dtc.predict(pred_X)
+
+    print(",".join(predict_labels.astype(str).tolist()))

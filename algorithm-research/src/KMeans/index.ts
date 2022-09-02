@@ -1,4 +1,5 @@
 import _ from "lodash";
+import adjust from "./adjust";
 import sorting from "./sorting";
 import {
   clusterSeparation,
@@ -17,6 +18,10 @@ class KMeans implements Iterator<number[]> {
   centroids?: number[][];
   done?: boolean;
   earlyStop: number;
+
+  sorting?: () => void;
+  // 패턴 기반의 KMeans를 사용량 기반으로 label 교체를 해야할 경우, sorting 우선적 실행이 일어나야함
+  adjust?: () => void;
 
   constructor(datas: number[][], earlyStop = 3) {
     this.datas = datas;
@@ -69,6 +74,10 @@ class KMeans implements Iterator<number[]> {
 
         this.labels = labels;
         this.centroids = centroids;
+
+        this.adjust = () => {
+          adjust.call(this);
+        };
       };
 
       return { value: this.labels, done: true };
@@ -99,8 +108,6 @@ class KMeans implements Iterator<number[]> {
   get ecv() {
     return (1 - this.wss / this.tss) * 100;
   }
-
-  sorting?: () => void;
 }
 
 export default KMeans;
