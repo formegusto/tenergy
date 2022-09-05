@@ -9,6 +9,7 @@ export async function dbConnect() {
 
     console.log("[mongoose] connected :)");
   } catch (err) {
+    console.error(err);
     console.error("[mongoose] connect error :(");
   }
 }

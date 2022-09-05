@@ -1,11 +1,8 @@
 import _ from "lodash";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
-import {
-  TimeMeterData,
-  ITimeDivisionMemory,
-  TimeDivisionMemory,
-} from "./models/types";
+import { TimeDivisionMemoryModel } from "./models";
+import { TimeMeterData, TimeDivisionMemory } from "./models/types";
 
 class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   size: number;
@@ -21,6 +18,24 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     this.datas = [];
     this.memory = [];
     this.isEnd = false;
+  }
+
+  static async get() {
+    const memoryDocs = await TimeDivisionMemoryModel.find({}).sort({
+      createdAt: 1,
+    });
+    const memory = _.map(memoryDocs, (doc) =>
+      TimeDivisionMemory.getFromDoc(doc)
+    );
+
+    const size = memory[0].centroids[0].length;
+    const tdKMeans = new TimeDivisionKMeans(size);
+    while (memory.length * size > tdKMeans.datas.length)
+      await tdKMeans.appendData();
+
+    tdKMeans.memory = memory;
+
+    return tdKMeans;
   }
 
   async appendData() {

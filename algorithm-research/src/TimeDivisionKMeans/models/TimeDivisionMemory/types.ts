@@ -31,6 +31,15 @@ export class TimeDivisionMemory implements ITimeDivisionMemory {
     this.centroids = centroids;
   }
 
+  static getFromDoc(document: ITimeDivisionMemory) {
+    return new TimeDivisionMemory(
+      document.start,
+      document.end,
+      document.labels,
+      document.centroids
+    );
+  }
+
   async save() {
     await TimeDivisionMemoryModel.create(this);
   }
