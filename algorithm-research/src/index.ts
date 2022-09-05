@@ -9,13 +9,13 @@ import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
   const tdKMeans = new TimeDivisionKMeans(3);
 
   await tdKMeans.appendData();
-  tdKMeans.next();
+  for (let _ of tdKMeans) {
+    await tdKMeans.appendData();
+  }
 
-  await tdKMeans.appendData();
-  tdKMeans.next();
-  // for (let _ of tdKMeans) {
-  //   await tdKMeans.appendData();
-  // }
+  for (let mem of tdKMeans.memory) {
+    await mem.save();
+  }
 
   // tdKMeans.next();
 

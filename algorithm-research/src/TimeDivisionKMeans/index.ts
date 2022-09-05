@@ -1,14 +1,18 @@
 import _ from "lodash";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
-import { TimeMeterData, ITimeDivisionMemory } from "./models/types";
+import {
+  TimeMeterData,
+  ITimeDivisionMemory,
+  TimeDivisionMemory,
+} from "./models/types";
 
-class TimeDivisionKMeans implements Iterator<ITimeDivisionMemory> {
+class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   size: number;
   cursor: number;
   datas: Array<any>;
 
-  memory: ITimeDivisionMemory[];
+  memory: TimeDivisionMemory[];
   isEnd: boolean;
 
   constructor(size: number) {
@@ -58,19 +62,15 @@ class TimeDivisionKMeans implements Iterator<ITimeDivisionMemory> {
     const labels = kmeans.labels!;
     const centroids = scaler!.reverseTransform(kmeans.centroids!);
 
-    this.memory.push({
-      start,
-      end,
-      labels,
-      centroids,
-    });
-    console.log(this.memory);
+    this.memory.push(new TimeDivisionMemory(start, end, labels, centroids));
+    console.log(this.memory.length);
+    // console.log(this.memory);
   }
 
   [Symbol.iterator]() {
     return this;
   }
-  next(...args: [] | [undefined]): IteratorResult<ITimeDivisionMemory, any> {
+  next(...args: [] | [undefined]): IteratorResult<TimeDivisionMemory, any> {
     if (this.isEnd) return { value: null, done: true };
 
     this.round();

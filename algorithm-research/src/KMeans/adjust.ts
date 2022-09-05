@@ -17,7 +17,7 @@ function dropAnomaly(
 
     if (!minNextX || minNextX.length === 0) continue;
     minNextX = minNextX[0];
-    console.log(`min next(${i + 1}) x`, minNextX);
+    // console.log(`min next(${i + 1}) x`, minNextX);
 
     // const anomaly = _.filter(nowZip, ([x]) => x! > minNextX!);
     // console.log(anomaly);
