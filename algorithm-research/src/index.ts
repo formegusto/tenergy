@@ -19,8 +19,20 @@ import { datasToUsages } from "./TimeDivisionKMeans/utils";
   const chunked = _.chunk(_.unzip(onlyUsages), tdKMeans.size);
   const dayHouseholdUsages = _.map(chunked, (chunk) => _.sum(_.flatten(chunk)));
   const weights = _.map(dayHouseholdUsages, (dh) => dh / householdUsages);
-  console.log(weights);
-  console.log(weights.length);
+  const weightTotal = _.sum(weights);
+
+  const contributeMap = _.zip.apply(
+    null,
+    _.map(tdKMeans.memory, ({ labels }) => labels)
+  );
+  const group = _.map(contributeMap, (contributes) => {
+    const zipDatas = _.zip(contributes, weights);
+    const multiplies = _.map(zipDatas, (data) =>
+      _.multiply.apply(null, data as [number, number])
+    );
+    return Math.round(_.sum(multiplies) / weightTotal);
+  });
+  console.log(group.length);
 
   dbDisconnect();
 })();
