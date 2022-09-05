@@ -3,11 +3,12 @@ import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
 import { TimeDivisionMemoryModel } from "./models";
 import { TimeMeterData, TimeDivisionMemory } from "./models/types";
+import { datasToUsages } from "./utils";
 
 class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   size: number;
   cursor: number;
-  datas: Array<any>;
+  datas: TimeMeterData[];
 
   memory: TimeDivisionMemory[];
   isEnd: boolean;
@@ -54,12 +55,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   round() {
     const takeDatas = _.takeRight(this.datas, this.size);
-    const datas = _.flatten(_.map(takeDatas, ({ data }) => data));
-
-    const grouped = _.groupBy(datas, "name");
-    const merge = _.mapValues(grouped, (g) => _.map(g, ({ kwh }) => kwh));
-
-    const meansDatas = _.valuesIn(merge);
+    const meansDatas = datasToUsages(takeDatas);
     const [normDatas, scaler] = scaling(meansDatas, true);
 
     const kmeans = new KMeans(normDatas);
