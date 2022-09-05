@@ -13,9 +13,6 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   memory: TimeDivisionMemory[];
   isEnd: boolean;
 
-  groups?: number[];
-  centroids?: number[][];
-
   constructor(size: number) {
     this.size = size;
     this.cursor = 0;
@@ -93,7 +90,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     return tdKMeans;
   }
 
-  set() {
+  get result() {
     const onlyUsages = datasToUsages(this.datas);
     const householdUsages = _.sum(_.flatten(onlyUsages));
 
@@ -118,18 +115,44 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
     const sortedUniqGroups = _.sortBy(_.uniq(groups));
     const centroids: number[][] = [];
+    const centroidsContributeMap: number[][] = [];
+
     for (let group of sortedUniqGroups) {
-      const parsed = _.filter(onlyUsages, (_, idx) => groups[idx] === group);
-      const meanParsed = _.map(_.zip.apply(null, parsed), _.mean);
-      const groupChunked = _.chunk(meanParsed, this.size);
+      let parsed = _.filter(onlyUsages, (_, idx) => groups[idx] === group);
+      let meanParsed = _.map(_.zip.apply(null, parsed), _.mean);
 
       // console.log(groupChunked);
+      const groupChunked = _.chunk(meanParsed, this.size);
       const centroid = _.map(groupChunked, _.sum);
       centroids.push(centroid);
+
+      parsed = _.filter(
+        contributeMap,
+        (_, idx) => groups[idx] === group
+      ) as any[];
+
+      const centroidContributeMap = _.map(_.zip.apply(null, parsed), (data) =>
+        Math.round(_.mean(data))
+      );
+      centroidsContributeMap.push(centroidContributeMap);
     }
 
-    this.groups = groups;
-    this.centroids = centroids;
+    return {
+      contributeMap,
+      groups,
+      centroids,
+      centroidsContributeMap,
+    };
+  }
+
+  async times() {
+    const timeIdxes = await TimeMeterData.getTimeIndex();
+
+    return 0;
+  }
+
+  async days() {
+    return 0;
   }
 }
 

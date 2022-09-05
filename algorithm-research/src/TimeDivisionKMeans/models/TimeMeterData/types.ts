@@ -45,4 +45,10 @@ export class TimeMeterData implements ITimeMeterData {
       TimeMeterData.getFromDocument(document)
     );
   }
+
+  static async getTimeIndex() {
+    const times = await TimeMeterDataModel.find({}, {}, { sort: { time: 1 } });
+
+    return _.map(times, ({ time }) => time);
+  }
 }
