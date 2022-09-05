@@ -52,7 +52,19 @@ function adjust(this: KMeans) {
     (label) => parseInt(label)
   );
 
-  return;
+  const newCentroids: number[][] = [];
+  // centroids 재배치
+  for (let label of _.sortBy(_.uniq(newLabels))) {
+    const members = _.filter(this.datas, (_, idx) => newLabels[idx] === label);
+    const centroids = _.map(_.unzip(members), (membersTime) =>
+      _.mean(membersTime)
+    );
+
+    newCentroids.push(centroids);
+  }
+
+  this.labels = newLabels;
+  this.centroids = newCentroids;
 }
 
 export default adjust;

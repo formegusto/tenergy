@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import TimeDivisionKMeans from "./TimeDivisionKMeans";
-import { dbConnect } from "./TimeDivisionKMeans/models";
+import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
 
 (async function () {
   dotenv.config();
@@ -13,4 +13,6 @@ import { dbConnect } from "./TimeDivisionKMeans/models";
 
   // await tdKMeans.appendData();
   // tdKMeans.next();
+
+  dbDisconnect();
 })();

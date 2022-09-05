@@ -1,4 +1,4 @@
-import { connect } from "mongoose";
+import { connect, disconnect } from "mongoose";
 
 export async function dbConnect() {
   const { MONGO_HOST, MONGO_PORT, MONGO_APP } = process.env;
@@ -11,4 +11,9 @@ export async function dbConnect() {
   } catch (err) {
     console.error("[mongoose] connect error :(");
   }
+}
+
+export function dbDisconnect() {
+  disconnect();
+  console.log("[mongoose] disconnected :)");
 }
