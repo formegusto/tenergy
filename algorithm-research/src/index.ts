@@ -11,6 +11,14 @@ import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
   await tdKMeans.appendData();
   tdKMeans.next();
 
+  await tdKMeans.appendData();
+  tdKMeans.next();
+  // for (let _ of tdKMeans) {
+  //   await tdKMeans.appendData();
+  // }
+
+  // tdKMeans.next();
+
   // await tdKMeans.appendData();
   // tdKMeans.next();
 
