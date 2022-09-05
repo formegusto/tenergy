@@ -3,7 +3,7 @@ import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
 import { TimeDivisionMemoryModel } from "./models";
 import { TimeMeterData, TimeDivisionMemory } from "./models/types";
-import { datasToUsages } from "./utils";
+import { dataDivisionBySize, datasToUsages } from "./utils";
 
 class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   size: number;
@@ -13,6 +13,9 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   memory: TimeDivisionMemory[];
   isEnd: boolean;
 
+  groups?: number[];
+  centroids?: number[][];
+
   constructor(size: number) {
     this.size = size;
     this.cursor = 0;
@@ -21,24 +24,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     this.isEnd = false;
   }
 
-  static async get() {
-    const memoryDocs = await TimeDivisionMemoryModel.find({}).sort({
-      createdAt: 1,
-    });
-    const memory = _.map(memoryDocs, (doc) =>
-      TimeDivisionMemory.getFromDoc(doc)
-    );
-
-    const size = memory[0].centroids[0].length;
-    const tdKMeans = new TimeDivisionKMeans(size);
-    while (memory.length * size > tdKMeans.datas.length)
-      await tdKMeans.appendData();
-
-    tdKMeans.memory = memory;
-
-    return tdKMeans;
-  }
-
+  // KMeans Process
   async appendData() {
     const meterDatas = await TimeMeterData.get(
       this.size * this.cursor,
@@ -86,6 +72,64 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
     this.round();
     return { value: _.takeRight(this.memory, 1)[0], done: false };
+  }
+
+  // TimeDivisionKMeans Setting
+  static async get() {
+    const memoryDocs = await TimeDivisionMemoryModel.find({}).sort({
+      createdAt: 1,
+    });
+    const memory = _.map(memoryDocs, (doc) =>
+      TimeDivisionMemory.getFromDoc(doc)
+    );
+
+    const size = memory[0].centroids[0].length;
+    const tdKMeans = new TimeDivisionKMeans(size);
+    while (memory.length * size > tdKMeans.datas.length)
+      await tdKMeans.appendData();
+
+    tdKMeans.memory = memory;
+
+    return tdKMeans;
+  }
+
+  set() {
+    const onlyUsages = datasToUsages(this.datas);
+    const householdUsages = _.sum(_.flatten(onlyUsages));
+
+    const chunked = dataDivisionBySize(onlyUsages, this.size);
+    const dayHouseholdUsages = _.map(chunked, (chunk) =>
+      _.sum(_.flatten(chunk))
+    );
+    const weights = _.map(dayHouseholdUsages, (dh) => dh / householdUsages);
+    const weightTotal = _.sum(weights);
+
+    const contributeMap = _.zip.apply(
+      null,
+      _.map(this.memory, ({ labels }) => labels)
+    );
+    const groups = _.map(contributeMap, (contributes) => {
+      const zipDatas = _.zip(contributes, weights);
+      const multiplies = _.map(zipDatas, (data) =>
+        _.multiply.apply(null, data as [number, number])
+      );
+      return Math.round(_.sum(multiplies) / weightTotal);
+    });
+
+    const sortedUniqGroups = _.sortBy(_.uniq(groups));
+    const centroids: number[][] = [];
+    for (let group of sortedUniqGroups) {
+      const parsed = _.filter(onlyUsages, (_, idx) => groups[idx] === group);
+      const meanParsed = _.map(_.zip.apply(null, parsed), _.mean);
+      const groupChunked = _.chunk(meanParsed, this.size);
+
+      // console.log(groupChunked);
+      const centroid = _.map(groupChunked, _.sum);
+      centroids.push(centroid);
+    }
+
+    this.groups = groups;
+    this.centroids = centroids;
   }
 }
 
