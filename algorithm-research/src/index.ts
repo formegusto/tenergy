@@ -3,7 +3,7 @@ import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
 import dotenv from "dotenv";
 
 import _ from "lodash";
-import { datasToUsages } from "./TimeDivisionKMeans/utils";
+import { dataDivisionBySize, datasToUsages } from "./TimeDivisionKMeans/utils";
 
 (async function () {
   dotenv.config();
@@ -16,7 +16,7 @@ import { datasToUsages } from "./TimeDivisionKMeans/utils";
   const onlyUsages = datasToUsages(tdKMeans.datas);
   const householdUsages = _.sum(_.flatten(onlyUsages));
 
-  const chunked = _.chunk(_.unzip(onlyUsages), tdKMeans.size);
+  const chunked = dataDivisionBySize(onlyUsages, tdKMeans.size);
   const dayHouseholdUsages = _.map(chunked, (chunk) => _.sum(_.flatten(chunk)));
   const weights = _.map(dayHouseholdUsages, (dh) => dh / householdUsages);
   const weightTotal = _.sum(weights);
@@ -32,7 +32,18 @@ import { datasToUsages } from "./TimeDivisionKMeans/utils";
     );
     return Math.round(_.sum(multiplies) / weightTotal);
   });
-  console.log(group.length);
+
+  const labels = _.sortBy(_.uniq(group));
+  const centroids: number[][] = [];
+  for (let label of labels) {
+    const parsed = _.filter(onlyUsages, (_, idx) => group[idx] === labels[0]);
+    const groupChunked = dataDivisionBySize(parsed, tdKMeans.size);
+
+    const centroid = _.map(groupChunked, (data) => _.mean(_.flatten(data)));
+    centroids.push(centroid);
+  }
+
+  console.log(centroids.length);
 
   dbDisconnect();
 })();
