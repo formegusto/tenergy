@@ -1,4 +1,4 @@
-import { TimeMeterData } from "../models/types";
+import { TimeMeterData } from "../../models/types";
 import _ from "lodash";
 
 export function datasToUsages(datas: TimeMeterData[]) {

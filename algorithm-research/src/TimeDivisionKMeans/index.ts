@@ -1,12 +1,12 @@
 import _ from "lodash";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
-import { TimeDivisionMemoryModel, TimeMeterDataModel } from "./models";
+import { TimeDivisionMemoryModel, TimeMeterDataModel } from "../models";
 import {
   TimeMeterData,
   TimeDivisionMemory,
   TimeLabelingData,
-} from "./models/types";
+} from "../models/types";
 import { dataDivisionBySize, datasToUsages } from "./utils";
 
 class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {

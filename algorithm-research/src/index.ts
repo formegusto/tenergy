@@ -1,24 +1,31 @@
-import TimeDivisionKMeans from "./TimeDivisionKMeans";
-import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
+import { dbConnect, dbDisconnect } from "./models";
 import dotenv from "dotenv";
 import _ from "lodash";
+import APT from "./APT";
 
+const publicPercentage = 30;
 (async function () {
   dotenv.config();
-
   await dbConnect();
 
-  const tdKMeans = await TimeDivisionKMeans.get();
-  console.log(tdKMeans.datas.length, tdKMeans.memory.length);
-  const result = await tdKMeans.result();
+  const apt = await APT.init(publicPercentage);
 
-  await tdKMeans.days();
-  // console.log(result.centroids);
-  // console.log(result.centroidsContributeMap);
+  //   const dataTest = await TimeMeterDataModel.aggregate([
+  //     {
+  //       $project: {
+  //         data: {
+  //           $filter: {
+  //             input: "$data",
+  //             as: "d",
+  //             cond: { $eq: ["$$d.name", "아파트1-104-1206"] },
+  //           },
+  //         },
+  //         time: 1,
+  //       },
+  //     },
+  //   ]).sort({ time: "asc" });
 
-  // const timeIdxes = await TimeMeterData.getTimeIndex();
-  // // 0: Sun ~ 6: Sat
-  // console.log(_.map(timeIdxes, (time) => time.getDay()));
+  //   console.log(_.map(dataTest));
 
   dbDisconnect();
 })();
