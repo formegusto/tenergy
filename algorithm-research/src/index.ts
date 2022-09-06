@@ -11,6 +11,8 @@ import _ from "lodash";
   const tdKMeans = await TimeDivisionKMeans.get();
   console.log(tdKMeans.datas.length, tdKMeans.memory.length);
   const result = await tdKMeans.result();
+
+  await tdKMeans.times();
   // console.log(result.centroids);
   // console.log(result.centroidsContributeMap);
 

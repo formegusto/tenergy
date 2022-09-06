@@ -162,10 +162,50 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     };
   }
 
+  // 해당 서비스에서 time의 개념은 hour의 개념
   async times() {
     const timeIdxes = await TimeMeterData.getTimeIndex();
+    const timeTargets = _.range(0, 24, this.size);
 
-    return 0;
+    const { centroids, centroidsContributeMap } = await this.result();
+
+    const timeCentroids: { [key: number]: TimeLabelingData[][] } = {};
+    _.forEach(timeTargets, (time) => {
+      const _timeCentroids: TimeLabelingData[][] = [];
+
+      _.forEach(centroids, (centroid) => {
+        const filtered = _.filter(
+          centroid,
+          (c) =>
+            c.time.getUTCHours() >= time &&
+            c.time.getUTCHours() < time + this.size
+        );
+        _timeCentroids.push(filtered);
+      });
+
+      timeCentroids[time] = _timeCentroids;
+    });
+    const timeCentroidsContributeMap: { [key: number]: number[] } = {};
+    _.forEach(timeTargets, (time) => {
+      const _timeCentroidsContributeMap: number[] = [];
+
+      _.forEach(centroidsContributeMap, (contributes) => {
+        const filtered = _.filter(
+          contributes,
+          (c) => c.time.getUTCHours() === time
+        );
+        _timeCentroidsContributeMap.push(
+          _.meanBy(filtered, (filter) => filter.value)
+        );
+      });
+
+      timeCentroidsContributeMap[time] = _timeCentroidsContributeMap;
+    });
+
+    return {
+      timeCentroids,
+      timeCentroidsContributeMap,
+    };
   }
 
   async days() {
