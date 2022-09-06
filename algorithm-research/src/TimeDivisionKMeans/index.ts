@@ -1,8 +1,12 @@
 import _ from "lodash";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
-import { TimeDivisionMemoryModel } from "./models";
-import { TimeMeterData, TimeDivisionMemory } from "./models/types";
+import { TimeDivisionMemoryModel, TimeMeterDataModel } from "./models";
+import {
+  TimeMeterData,
+  TimeDivisionMemory,
+  TimeLabelingData,
+} from "./models/types";
 import { dataDivisionBySize, datasToUsages } from "./utils";
 
 class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
@@ -90,7 +94,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     return tdKMeans;
   }
 
-  get result() {
+  async result() {
     const onlyUsages = datasToUsages(this.datas);
     const householdUsages = _.sum(_.flatten(onlyUsages));
 
@@ -104,7 +108,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     const contributeMap = _.zip.apply(
       null,
       _.map(this.memory, ({ labels }) => labels)
-    );
+    ) as number[][];
     const groups = _.map(contributeMap, (contributes) => {
       const zipDatas = _.zip(contributes, weights);
       const multiplies = _.map(zipDatas, (data) =>
@@ -137,11 +141,25 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
       centroidsContributeMap.push(centroidContributeMap);
     }
 
+    // time labeling
+    const timeIdx = await TimeMeterData.getTimeIndex();
+    const sliceTimeIdx = (
+      _.zip.apply(null, _.chunk(timeIdx, this.size)) as Date[][]
+    )[0];
+
     return {
-      contributeMap,
       groups,
-      centroids,
-      centroidsContributeMap,
+      contributeMap: _.map(contributeMap, (contributes) =>
+        TimeLabelingData.generateArray(contributes, sliceTimeIdx)
+      ),
+      centroids: _.map(centroids, (centroid) =>
+        TimeLabelingData.generateArray(centroid, sliceTimeIdx)
+      ),
+      centroidsContributeMap: _.map(
+        centroidsContributeMap,
+        (centroidContributes) =>
+          TimeLabelingData.generateArray(centroidContributes, sliceTimeIdx)
+      ),
     };
   }
 
@@ -152,6 +170,8 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   }
 
   async days() {
+    const timeIdxes = await TimeMeterData.getTimeIndex();
+
     return 0;
   }
 }

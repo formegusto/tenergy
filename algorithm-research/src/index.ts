@@ -2,7 +2,6 @@ import TimeDivisionKMeans from "./TimeDivisionKMeans";
 import { dbConnect, dbDisconnect } from "./TimeDivisionKMeans/models";
 import dotenv from "dotenv";
 import _ from "lodash";
-import { TimeMeterData } from "./TimeDivisionKMeans/models/types";
 
 (async function () {
   dotenv.config();
@@ -11,8 +10,8 @@ import { TimeMeterData } from "./TimeDivisionKMeans/models/types";
 
   const tdKMeans = await TimeDivisionKMeans.get();
   console.log(tdKMeans.datas.length, tdKMeans.memory.length);
-
-  tdKMeans.result;
+  const result = await tdKMeans.result();
+  console.log(result.centroidsContributeMap);
 
   // const timeIdxes = await TimeMeterData.getTimeIndex();
   // // 0: Sun ~ 6: Sat
