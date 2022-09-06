@@ -123,18 +123,17 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
     for (let group of sortedUniqGroups) {
       let parsed = _.filter(onlyUsages, (_, idx) => groups[idx] === group);
-      let meanParsed = _.map(_.zip.apply(null, parsed), _.mean);
+      // let meanParsed = _.map(_.zip.apply(null, parsed), _.mean);
+      let centroid = _.map(_.zip.apply(null, parsed), _.mean);
 
-      // console.log(groupChunked);
-      const groupChunked = _.chunk(meanParsed, this.size);
-      const centroid = _.map(groupChunked, _.sum);
+      // const groupChunked = _.chunk(meanParsed, this.size);
+      // const centroid = _.map(groupChunked, _.sum);
       centroids.push(centroid);
 
       parsed = _.filter(
         contributeMap,
         (_, idx) => groups[idx] === group
       ) as any[];
-
       const centroidContributeMap = _.map(_.zip.apply(null, parsed), (data) =>
         Math.round(_.mean(data))
       );
@@ -153,7 +152,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
         TimeLabelingData.generateArray(contributes, sliceTimeIdx)
       ),
       centroids: _.map(centroids, (centroid) =>
-        TimeLabelingData.generateArray(centroid, sliceTimeIdx)
+        TimeLabelingData.generateArray(centroid, timeIdx)
       ),
       centroidsContributeMap: _.map(
         centroidsContributeMap,

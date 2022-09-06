@@ -11,7 +11,8 @@ import _ from "lodash";
   const tdKMeans = await TimeDivisionKMeans.get();
   console.log(tdKMeans.datas.length, tdKMeans.memory.length);
   const result = await tdKMeans.result();
-  console.log(result.centroidsContributeMap);
+  // console.log(result.centroids);
+  // console.log(result.centroidsContributeMap);
 
   // const timeIdxes = await TimeMeterData.getTimeIndex();
   // // 0: Sun ~ 6: Sat
