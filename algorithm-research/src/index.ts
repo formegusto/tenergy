@@ -12,7 +12,7 @@ import _ from "lodash";
   console.log(tdKMeans.datas.length, tdKMeans.memory.length);
   const result = await tdKMeans.result();
 
-  await tdKMeans.times();
+  await tdKMeans.days();
   // console.log(result.centroids);
   // console.log(result.centroidsContributeMap);
 

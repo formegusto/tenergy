@@ -164,7 +164,6 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   // 해당 서비스에서 time의 개념은 hour의 개념
   async times() {
-    const timeIdxes = await TimeMeterData.getTimeIndex();
     const timeTargets = _.range(0, 24, this.size);
 
     const { centroids, centroidsContributeMap } = await this.result();
@@ -187,17 +186,16 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     });
     const timeCentroidsContributeMap: { [key: number]: number[] } = {};
     _.forEach(timeTargets, (time) => {
-      const _timeCentroidsContributeMap: number[] = [];
-
-      _.forEach(centroidsContributeMap, (contributes) => {
-        const filtered = _.filter(
-          contributes,
-          (c) => c.time.getUTCHours() === time
-        );
-        _timeCentroidsContributeMap.push(
-          _.meanBy(filtered, (filter) => filter.value)
-        );
-      });
+      const _timeCentroidsContributeMap: number[] = _.map(
+        centroidsContributeMap,
+        (contributes) => {
+          const filtered = _.filter(
+            contributes,
+            (c) => c.time.getUTCHours() === time
+          );
+          return _.meanBy(filtered, (filter) => filter.value);
+        }
+      );
 
       timeCentroidsContributeMap[time] = _timeCentroidsContributeMap;
     });
@@ -209,7 +207,37 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   }
 
   async days() {
-    const timeIdxes = await TimeMeterData.getTimeIndex();
+    // DAY 0~6 SUN ~ SAT
+    const dayTargets = _.range(0, 7);
+    const { centroids, centroidsContributeMap } = await this.result();
+
+    const dayCentroids: { [key: number]: TimeLabelingData[][] } = {};
+    _.forEach(dayTargets, (day) => {
+      const _dayCentroids: TimeLabelingData[][] = [];
+      _.forEach(centroids, (centroid) => {
+        const filtered = _.filter(centroid, (c) => c.time.getUTCDay() === day);
+
+        _dayCentroids.push(filtered);
+      });
+
+      dayCentroids[day] = _dayCentroids;
+    });
+
+    const dayCentroidsContributeMap: { [key: number]: number[] } = {};
+    _.forEach(dayTargets, (day) => {
+      const _dayCentroidsContributeMap: number[] = _.map(
+        centroidsContributeMap,
+        (contributes) => {
+          const filtered = _.filter(
+            contributes,
+            (c) => c.time.getUTCDay() === day
+          );
+
+          return _.meanBy(filtered, (filter) => filter.value);
+        }
+      );
+      dayCentroidsContributeMap[day] = _dayCentroidsContributeMap;
+    });
 
     return 0;
   }
