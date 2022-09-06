@@ -9,6 +9,7 @@ const publicPercentage = 30;
   await dbConnect();
 
   const apt = await APT.init(publicPercentage);
+  apt.show();
 
   //   const dataTest = await TimeMeterDataModel.aggregate([
   //     {

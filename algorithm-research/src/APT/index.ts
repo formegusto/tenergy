@@ -11,6 +11,10 @@ class APT {
     this.publicPercentage = publicPercentage;
   }
 
+  show() {
+    console.log(_.map(this.households, (household) => household.bill));
+  }
+
   static async init(publicPercentage: number) {
     const householdDocs = await HouseholdModel.find({}, { _id: 0, name: 1 });
     const householdNames = _.map(householdDocs, ({ name }) => name);
