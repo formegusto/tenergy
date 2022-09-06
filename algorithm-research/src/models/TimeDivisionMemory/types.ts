@@ -2,6 +2,28 @@ import { Schema } from "mongoose";
 import { TimeDivisionMemoryModel } from ".";
 import _ from "lodash";
 
+export interface INameLabelingData {
+  name: string;
+  value: number;
+}
+
+export class NameLabelingData {
+  name: string;
+  value: number;
+
+  constructor(name: string, value: number) {
+    this.name = name;
+    this.value = value;
+  }
+
+  static generateArray(datas: number[], names: string[]) {
+    return _.map(
+      _.zip(datas, names),
+      ([value, name]) => new NameLabelingData(name!, value!)
+    );
+  }
+}
+
 export interface ITimeLabelingData {
   time: Date;
   value: number;

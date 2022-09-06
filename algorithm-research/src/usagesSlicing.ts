@@ -2,6 +2,7 @@ import TimeDivisionKMeans from "./TimeDivisionKMeans";
 import { dbConnect, dbDisconnect } from "./models";
 import dotenv from "dotenv";
 import _ from "lodash";
+import APT from "./APT";
 
 export default async function () {
   dotenv.config();
@@ -11,8 +12,11 @@ export default async function () {
   const tdKMeans = await TimeDivisionKMeans.get();
   console.log(tdKMeans.datas.length, tdKMeans.memory.length);
   const result = await tdKMeans.result();
+  // console.log(result.groups);
 
-  await tdKMeans.days();
+  const apt = await APT.init(30);
+  apt.show();
+  // await tdKMeans.days();
   // console.log(result.centroids);
   // console.log(result.centroidsContributeMap);
 

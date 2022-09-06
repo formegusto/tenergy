@@ -1,11 +1,13 @@
 import _ from "lodash";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
-import { TimeDivisionMemoryModel, TimeMeterDataModel } from "../models";
+import { TimeDivisionMemoryModel } from "../models";
 import {
   TimeMeterData,
   TimeDivisionMemory,
   TimeLabelingData,
+  MeterData,
+  NameLabelingData,
 } from "../models/types";
 import { dataDivisionBySize, datasToUsages } from "./utils";
 
@@ -96,6 +98,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   async result() {
     const onlyUsages = datasToUsages(this.datas);
+    const householdNames = _.map(this.datas[0].data, ({ name }) => name);
     const householdUsages = _.sum(_.flatten(onlyUsages));
 
     const chunked = dataDivisionBySize(onlyUsages, this.size);
@@ -147,7 +150,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     )[0];
 
     return {
-      groups,
+      groups: NameLabelingData.generateArray(groups, householdNames),
       contributeMap: _.map(contributeMap, (contributes) =>
         TimeLabelingData.generateArray(contributes, sliceTimeIdx)
       ),
