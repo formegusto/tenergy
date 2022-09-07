@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { FeedbackTarget } from "./Feedback/types";
 import { dbConnect, dbDisconnect } from "./models";
 import TimeDivisionKMeans from "./TimeDivisionKMeans";
 
@@ -15,9 +16,18 @@ import TimeDivisionKMeans from "./TimeDivisionKMeans";
   //   const household = await Household.init("아파트1-104-1206");
   const tdKMeans = await TimeDivisionKMeans.get();
   //   await tdKMeans.result();
+  const { centroids, centroidsContributeMap } = await tdKMeans.result();
+  const target = new FeedbackTarget(centroids[0], centroidsContributeMap[0]);
+  const { pat: timePat, conts: timeConts } = target.getTimes(tdKMeans.size);
+  console.log(timePat);
+  console.log(timeConts);
 
-  console.log(await tdKMeans.days());
-  console.log(await tdKMeans.times());
+  const { pat: dayPat, conts: dayConts } = target.getDays();
+  console.log(dayPat);
+  console.log(dayConts);
+
+  //   console.log(await tdKMeans.days());
+  //   console.log(await tdKMeans.times());
 
   dbDisconnect();
 })();
