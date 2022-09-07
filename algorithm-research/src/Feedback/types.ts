@@ -1,6 +1,11 @@
 import { TimeLabelingData } from "../models/types";
 import _ from "lodash";
 
+// 이 시간에 평균 ~정도 아끼면 좋을 거 같아.
+export interface IFeedback {
+  [key: number]: number;
+}
+
 export interface IFeedbackTargetMaterial {
   pat: TimeLabelingData[];
   conts: TimeLabelingData[];

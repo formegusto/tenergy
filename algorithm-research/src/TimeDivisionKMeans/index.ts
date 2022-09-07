@@ -1,5 +1,9 @@
 import _ from "lodash";
-import { IFeedbackTargetMaterial } from "../Feedback/types";
+import {
+  FeedbackTarget,
+  IFeedbackTarget,
+  IFeedbackTargetMaterial,
+} from "../Feedback/types";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
 import { TimeDivisionMemoryModel } from "../models";
@@ -22,7 +26,10 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   isEnd: boolean;
 
   private households?: Household[];
-  getHousehold?: (name: string) => IFeedbackTargetMaterial | null;
+  getHousehold?: (name: string) => {
+    self: Household;
+    feedbackMaterial: IFeedbackTargetMaterial;
+  } | null;
 
   constructor(size: number) {
     this.size = size;
@@ -121,12 +128,14 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     const weightTotal = _.sum(weights);
 
     const contributeMap = _.map(households, (household) => household.conts);
-    const groups = _.map(contributeMap, (contributes) => {
+    const groups = _.map(contributeMap, (contributes, idx) => {
       const zipDatas = _.zip(contributes, weights);
       const multiplies = _.map(zipDatas, (data) =>
         _.multiply.apply(null, data as [number, number])
       );
-      return Math.round(_.sum(multiplies) / weightTotal);
+      const group = Math.round(_.sum(multiplies) / weightTotal);
+      households[idx].group = group;
+      return group;
     });
 
     const sortedUniqGroups = _.sortBy(_.uniq(groups));
@@ -167,14 +176,17 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
       if (finded)
         return {
-          pat: _.map(finded.pat, (p, idx) => ({
-            time: timeIdx[idx],
-            value: p,
-          })),
-          conts: _.map(finded.conts, (c, idx) => ({
-            time: sliceTimeIdx[idx],
-            value: c,
-          })),
+          self: finded,
+          feedbackMaterial: {
+            pat: _.map(finded.pat, (p, idx) => ({
+              time: timeIdx[idx],
+              value: p,
+            })),
+            conts: _.map(finded.conts, (c, idx) => ({
+              time: sliceTimeIdx[idx],
+              value: c,
+            })),
+          },
         };
       else return null;
     };
@@ -196,83 +208,45 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
   }
 
   // 해당 서비스에서 time의 개념은 hour의 개념
-  async times() {
-    const timeTargets = _.range(0, 24, this.size);
-
+  async times(
+    group: number
+  ): Promise<
+    [nowFeedbackTarget: IFeedbackTarget, prevFeedbackTarget: IFeedbackTarget]
+  > {
     const { centroids, centroidsContributeMap } = await this.result();
 
-    const timeCentroids: { [key: number]: TimeLabelingData[][] } = {};
-    _.forEach(timeTargets, (time) => {
-      const _timeCentroids: TimeLabelingData[][] = [];
-
-      _.forEach(centroids, (centroid) => {
-        const filtered = _.filter(
-          centroid,
-          (c) =>
-            c.time.getUTCHours() >= time &&
-            c.time.getUTCHours() < time + this.size
-        );
-        _timeCentroids.push(filtered);
-      });
-
-      timeCentroids[time] = _timeCentroids;
+    const nowFeedbackTarget = new FeedbackTarget({
+      pat: centroids[group],
+      conts: centroidsContributeMap[group],
     });
-    const timeCentroidsContributeMap: { [key: number]: number[] } = {};
-    _.forEach(timeTargets, (time) => {
-      const _timeCentroidsContributeMap: number[] = _.map(
-        centroidsContributeMap,
-        (contributes) => {
-          const filtered = _.filter(
-            contributes,
-            (c) => c.time.getUTCHours() === time
-          );
-          return _.meanBy(filtered, (filter) => filter.value);
-        }
-      );
-
-      timeCentroidsContributeMap[time] = _timeCentroidsContributeMap;
+    const prevFeedbackTarget = new FeedbackTarget({
+      pat: centroids[group - 1],
+      conts: centroidsContributeMap[group - 1],
     });
 
-    return {
-      pat: timeCentroids,
-      conts: timeCentroidsContributeMap,
-    };
+    return [
+      nowFeedbackTarget.getTimes(this.size),
+      prevFeedbackTarget.getTimes(this.size),
+    ];
   }
 
-  async days() {
-    // DAY 0~6 SUN ~ SAT
-    const dayTargets = _.range(0, 7);
+  async days(
+    group: number
+  ): Promise<
+    [nowFeedbackTarget: IFeedbackTarget, prevFeedbackTarget: IFeedbackTarget]
+  > {
     const { centroids, centroidsContributeMap } = await this.result();
 
-    const dayCentroids: { [key: number]: TimeLabelingData[][] } = {};
-    _.forEach(dayTargets, (day) => {
-      const _dayCentroids: TimeLabelingData[][] = [];
-      _.forEach(centroids, (centroid) => {
-        const filtered = _.filter(centroid, (c) => c.time.getUTCDay() === day);
-
-        _dayCentroids.push(filtered);
-      });
-
-      dayCentroids[day] = _dayCentroids;
+    const nowFeedbackTarget = new FeedbackTarget({
+      pat: centroids[group],
+      conts: centroidsContributeMap[group],
+    });
+    const prevFeedbackTarget = new FeedbackTarget({
+      pat: centroids[group - 1],
+      conts: centroidsContributeMap[group - 1],
     });
 
-    const dayCentroidsContributeMap: { [key: number]: number[] } = {};
-    _.forEach(dayTargets, (day) => {
-      const _dayCentroidsContributeMap: number[] = _.map(
-        centroidsContributeMap,
-        (contributes) => {
-          const filtered = _.filter(
-            contributes,
-            (c) => c.time.getUTCDay() === day
-          );
-
-          return _.meanBy(filtered, (filter) => filter.value);
-        }
-      );
-      dayCentroidsContributeMap[day] = _dayCentroidsContributeMap;
-    });
-
-    return { pat: dayCentroids, conts: dayCentroidsContributeMap };
+    return [nowFeedbackTarget.getDays(), prevFeedbackTarget.getDays()];
   }
 }
 

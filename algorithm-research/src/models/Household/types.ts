@@ -94,7 +94,7 @@ export class Household {
     const pat = _.map(
       _.flatten(_.map(meterDatas, ({ data }) => data)),
       ({ kwh }) => kwh
-    );
+    ) as number[];
 
     const contributions = await TimeDivisionMemoryModel.aggregate([
       {
