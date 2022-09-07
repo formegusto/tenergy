@@ -6,8 +6,9 @@ import {
   TimeMeterData,
   TimeDivisionMemory,
   TimeLabelingData,
-  MeterData,
   NameLabelingData,
+  INameLabelingData,
+  Household,
 } from "../models/types";
 import { dataDivisionBySize, datasToUsages } from "./utils";
 
@@ -44,6 +45,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   round() {
     const takeDatas = _.takeRight(this.datas, this.size);
+    const householdNames = _.map(takeDatas[0].data, ({ name }) => name);
     const meansDatas = datasToUsages(takeDatas);
     const [normDatas, scaler] = scaling(meansDatas, true);
 
@@ -59,7 +61,10 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
     const start = this.size * (this.cursor - 1);
     const end = this.size * this.cursor - 1;
-    const labels = kmeans.labels!;
+    const labels: INameLabelingData[] = _.map(
+      _.zip(householdNames!, kmeans.labels!),
+      ([name, value]) => ({ name: name!, value: value! })
+    );
     const centroids = scaler!.reverseTransform(kmeans.centroids!);
 
     this.memory.push(new TimeDivisionMemory(start, end, labels, centroids));
@@ -98,8 +103,10 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   async result() {
     const onlyUsages = datasToUsages(this.datas);
+
     const householdNames = _.map(this.datas[0].data, ({ name }) => name);
-    const householdUsages = _.sum(_.flatten(onlyUsages));
+    const households = await Promise.all(_.map(householdNames, Household.init));
+    const householdUsages = _.sumBy(households, (household) => household.kwh);
 
     const chunked = dataDivisionBySize(onlyUsages, this.size);
     const dayHouseholdUsages = _.map(chunked, (chunk) =>
@@ -108,10 +115,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     const weights = _.map(dayHouseholdUsages, (dh) => dh / householdUsages);
     const weightTotal = _.sum(weights);
 
-    const contributeMap = _.zip.apply(
-      null,
-      _.map(this.memory, ({ labels }) => labels)
-    ) as number[][];
+    const contributeMap = _.map(households, (household) => household.conts);
     const groups = _.map(contributeMap, (contributes) => {
       const zipDatas = _.zip(contributes, weights);
       const multiplies = _.map(zipDatas, (data) =>
@@ -204,8 +208,8 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     });
 
     return {
-      timeCentroids,
-      timeCentroidsContributeMap,
+      pat: timeCentroids,
+      conts: timeCentroidsContributeMap,
     };
   }
 
@@ -242,7 +246,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
       dayCentroidsContributeMap[day] = _dayCentroidsContributeMap;
     });
 
-    return 0;
+    return { pat: dayCentroids, conts: dayCentroidsContributeMap };
   }
 }
 

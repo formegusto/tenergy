@@ -5,7 +5,7 @@ const TimeDivisionMemorySchema = new Schema<ITimeDivisionMemory>(
   {
     start: { type: Number, required: true },
     end: { type: Number, required: true },
-    labels: [{ type: Number, required: true }],
+    labels: [{ type: Schema.Types.Mixed, required: true }],
     centroids: [[{ type: Number, required: true }]],
   },
   {

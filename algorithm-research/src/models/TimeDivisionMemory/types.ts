@@ -51,7 +51,7 @@ export interface ITimeDivisionMemory {
 
   start: number;
   end: number;
-  labels: number[];
+  labels: INameLabelingData[];
   centroids: number[][];
 
   createdAt?: Date;
@@ -61,13 +61,13 @@ export interface ITimeDivisionMemory {
 export class TimeDivisionMemory implements ITimeDivisionMemory {
   start: number;
   end: number;
-  labels: number[];
+  labels: INameLabelingData[];
   centroids: number[][];
 
   constructor(
     start: number,
     end: number,
-    labels: number[],
+    labels: INameLabelingData[],
     centroids: number[][]
   ) {
     this.start = start;

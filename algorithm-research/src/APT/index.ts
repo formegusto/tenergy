@@ -20,9 +20,11 @@ class APT {
       (this.householdPart * 100) / (100 - publicPercentage)
     );
     this.publicPart = this.usage - this.householdPart;
-    this.apt = new Household("APT", [
-      this.usage / Math.round(households.length),
-    ]);
+    this.apt = new Household(
+      "APT",
+      [this.usage / Math.round(households.length)],
+      []
+    );
     this.households = households;
     this.publicPercentage = publicPercentage;
   }

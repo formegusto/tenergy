@@ -3,6 +3,7 @@ import { TimeMeterDataModel } from "../TimeMeterData";
 import _ from "lodash";
 import { monthToSeason } from "../../utils";
 import { BASIC, ELECRATE, NUGIN_ERR, NUGIN_STEP } from "../../common";
+import { TimeDivisionMemoryModel } from "../TimeDivisionMemory";
 
 export interface IHousehod {
   _id?: Schema.Types.ObjectId | string;
@@ -13,13 +14,15 @@ export interface IHousehod {
 export class Household {
   month: number;
   name: string;
-  pat?: number[];
+  pat!: number[];
+  conts!: number[];
   group?: number;
 
-  constructor(name: string, pat: number[]) {
+  constructor(name: string, pat: number[], conts: number[]) {
     this.month = 1;
     this.name = name;
     this.pat = pat;
+    this.conts = conts;
   }
 
   get kwh() {
@@ -93,6 +96,24 @@ export class Household {
       ({ kwh }) => kwh
     );
 
-    return new Household(name, pat);
+    const contributions = await TimeDivisionMemoryModel.aggregate([
+      {
+        $project: {
+          labels: {
+            $filter: {
+              input: "$labels",
+              as: "label",
+              cond: { $eq: ["$$label.name", name] },
+            },
+          },
+        },
+      },
+    ]).sort({ createdAt: "asc" });
+    const conts = _.map(
+      _.flatten(_.map(contributions, ({ labels }) => labels)),
+      ({ value }) => value
+    ) as number[];
+
+    return new Household(name, pat, conts);
   }
 }
