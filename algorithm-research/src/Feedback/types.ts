@@ -1,16 +1,26 @@
 import { TimeLabelingData } from "../models/types";
 import _ from "lodash";
 
+export interface IFeedbackTargetMaterial {
+  pat: TimeLabelingData[];
+  conts: TimeLabelingData[];
+}
+
+export interface IFeedbackTarget {
+  pat: { [key: number]: TimeLabelingData[] };
+  conts: { [key: number]: number };
+}
+
 export class FeedbackTarget {
   pat: TimeLabelingData[];
   conts: TimeLabelingData[];
 
-  constructor(pat: TimeLabelingData[], conts: TimeLabelingData[]) {
+  constructor({ pat, conts }: IFeedbackTargetMaterial) {
     this.pat = pat;
     this.conts = conts;
   }
 
-  getTimes(timeSize: number) {
+  getTimes(timeSize: number): IFeedbackTarget {
     const timeTargets = _.range(0, 24, timeSize);
 
     const pat = _.map(timeTargets, (time) =>
@@ -34,7 +44,7 @@ export class FeedbackTarget {
     };
   }
 
-  getDays() {
+  getDays(): IFeedbackTarget {
     const dayTargets = _.range(0, 7);
 
     const pat = _.map(dayTargets, (day) =>

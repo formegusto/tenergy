@@ -17,7 +17,10 @@ import TimeDivisionKMeans from "./TimeDivisionKMeans";
   const tdKMeans = await TimeDivisionKMeans.get();
   //   await tdKMeans.result();
   const { centroids, centroidsContributeMap } = await tdKMeans.result();
-  const target = new FeedbackTarget(centroids[0], centroidsContributeMap[0]);
+  const target = new FeedbackTarget({
+    pat: centroids[0],
+    conts: centroidsContributeMap[0],
+  });
   const { pat: timePat, conts: timeConts } = target.getTimes(tdKMeans.size);
   console.log(timePat);
   console.log(timeConts);
@@ -25,6 +28,20 @@ import TimeDivisionKMeans from "./TimeDivisionKMeans";
   const { pat: dayPat, conts: dayConts } = target.getDays();
   console.log(dayPat);
   console.log(dayConts);
+
+  const householdMaterial = tdKMeans.getHousehold!("아파트1-104-1206");
+  if (householdMaterial) {
+    const householdFeedback = new FeedbackTarget(householdMaterial);
+    const { pat: timePat, conts: timeConts } = householdFeedback.getTimes(
+      tdKMeans.size
+    );
+    console.log(timePat);
+    console.log(timeConts);
+
+    const { pat: dayPat, conts: dayConts } = householdFeedback.getDays();
+    console.log(dayPat);
+    console.log(dayConts);
+  }
 
   //   console.log(await tdKMeans.days());
   //   console.log(await tdKMeans.times());

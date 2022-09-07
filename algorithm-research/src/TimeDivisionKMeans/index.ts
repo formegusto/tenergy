@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { IFeedbackTargetMaterial } from "../Feedback/types";
 import KMeans from "../KMeans";
 import { scaling } from "../MinMaxScaler/scailing";
 import { TimeDivisionMemoryModel } from "../models";
@@ -19,6 +20,9 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
   memory: TimeDivisionMemory[];
   isEnd: boolean;
+
+  private households?: Household[];
+  getHousehold?: (name: string) => IFeedbackTargetMaterial | null;
 
   constructor(size: number) {
     this.size = size;
@@ -106,6 +110,7 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
 
     const householdNames = _.map(this.datas[0].data, ({ name }) => name);
     const households = await Promise.all(_.map(householdNames, Household.init));
+
     const householdUsages = _.sumBy(households, (household) => household.kwh);
 
     const chunked = dataDivisionBySize(onlyUsages, this.size);
@@ -152,6 +157,27 @@ class TimeDivisionKMeans implements Iterator<TimeDivisionMemory> {
     const sliceTimeIdx = (
       _.zip.apply(null, _.chunk(timeIdx, this.size)) as Date[][]
     )[0];
+
+    this.households = households;
+    this.getHousehold = (name: string) => {
+      const finded = _.find(
+        this.households,
+        (household) => household.name === name
+      );
+
+      if (finded)
+        return {
+          pat: _.map(finded.pat, (p, idx) => ({
+            time: timeIdx[idx],
+            value: p,
+          })),
+          conts: _.map(finded.conts, (c, idx) => ({
+            time: sliceTimeIdx[idx],
+            value: c,
+          })),
+        };
+      else return null;
+    };
 
     return {
       groups: NameLabelingData.generateArray(groups, householdNames),
