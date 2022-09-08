@@ -18,15 +18,22 @@ export class Household {
   conts!: number[];
   group?: number;
 
+  tradeKwh: number;
+  benefit: number;
+  loss: number;
+
   constructor(name: string, pat: number[], conts: number[]) {
     this.month = 1;
     this.name = name;
     this.pat = pat;
     this.conts = conts;
+    this.tradeKwh = 0;
+    this.benefit = 0;
+    this.loss = 0;
   }
 
   get kwh() {
-    return Math.round(_.sum(this.pat));
+    return Math.round(_.sum(this.pat)) - this.tradeKwh;
   }
 
   get steps(): Array<number> {
@@ -73,7 +80,7 @@ export class Household {
   }
 
   get bill(): number {
-    return this.basic + this.elecRate;
+    return this.basic + this.elecRate - this.benefit + this.loss;
   }
 
   static async init(name: string) {

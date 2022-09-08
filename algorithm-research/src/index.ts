@@ -7,9 +7,15 @@ import { dbConnect, dbDisconnect } from "./models";
   await dbConnect();
 
   const eTrade = await EnergyTrade.init(5);
-  const maxBuyer = eTrade.searchBuyer();
 
-  console.log(maxBuyer);
+  for (let _ of eTrade);
+
+  const analyzer = eTrade.clean();
+  console.log(analyzer);
+
+  console.log(analyzer.householdPartBill);
+  console.log(analyzer.publicPartBill);
+  console.log(analyzer.householdCompare);
 
   dbDisconnect();
 })();
