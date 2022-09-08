@@ -1,14 +1,15 @@
 import dotenv from "dotenv";
-import Feedback from "./Feedback";
+import EnergyTrade from "./EnergyTrade";
 import { dbConnect, dbDisconnect } from "./models";
 
 (async function () {
   dotenv.config();
   await dbConnect();
 
-  const feedback = await Feedback.init(1);
-  // await feedback.time("아파트1-103-1402");
-  console.log(await feedback.day("아파트1-103-1402"));
+  const eTrade = await EnergyTrade.init(5);
+  const maxBuyer = eTrade.searchBuyer();
+
+  console.log(maxBuyer);
 
   dbDisconnect();
 })();
