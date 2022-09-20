@@ -1,4 +1,4 @@
-export interface ReqChartDataParams {
-  [key: string]: string;
-  d: string;
+export interface ResGetChartBody {
+  total: number;
+  usages: Array<number>;
 }

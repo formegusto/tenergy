@@ -1,6 +1,6 @@
 import { UnauthError } from "@common";
-import { AdminModel } from "@models/admin";
-import { HouseholdModel } from "@models/household";
+import { AdminModel } from "@models/Admin";
+import { HouseholdModel } from "@models/Household";
 import { Schema } from "mongoose";
 
 export type AuthRole = "HOUSEHOLD" | "ADMIN";

@@ -6,4 +6,4 @@ const AdminSchema = new Schema<IAdmin>(
   { timestamps: true, collection: "Admin" }
 );
 
-export const AdminModel = model<IAdmin>("Admin", AdminSchema);
+export const AdminModel = model<typeof AdminSchema>("Admin", AdminSchema);
