@@ -4,6 +4,7 @@ import { APT } from "@models/APT/types";
 import _ from "lodash";
 import { StatusCodes } from "http-status-codes";
 import { ResGetChartBody } from "./types";
+import { APTBuilder } from "@models";
 
 const routes = Express.Router();
 
@@ -13,6 +14,12 @@ routes.get(
   loginCheck,
   adminCheck,
   async (req: Express.Request, res: Express.Response) => {
+    const builder = new APTBuilder();
+    await builder.setDetail();
+    const apt = builder.get();
+
+    console.log(apt.households);
+
     return res.send("test");
   }
 );
@@ -33,7 +40,10 @@ routes.get(
   loginCheck,
   adminCheck,
   async (req: Express.Request, res: Express.Response<ResGetChartBody>) => {
-    const apt = await APT.init();
+    const builder = new APTBuilder();
+    await builder.setSimple();
+
+    const apt = builder.get();
     const chartDatas = _.map(apt.timeMeterDatas, (timeMeter) => timeMeter.sum);
 
     return res.status(StatusCodes.OK).json({
