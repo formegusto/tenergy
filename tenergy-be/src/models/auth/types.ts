@@ -6,17 +6,17 @@ import { Schema } from "mongoose";
 export type AuthRole = "HOUSEHOLD" | "ADMIN";
 
 export interface IAuth {
-  _id?: Schema.Types.ObjectId;
+  _id?: string;
   name: string;
   role: AuthRole;
 }
 
 export class Auth implements IAuth {
-  _id?: Schema.Types.ObjectId;
+  _id?: string;
   name: string;
   role: AuthRole;
 
-  constructor(name: string, role: AuthRole, _id?: Schema.Types.ObjectId) {
+  constructor(name: string, role: AuthRole, _id?: string) {
     this._id = _id;
     this.name = name;
     this.role = role;

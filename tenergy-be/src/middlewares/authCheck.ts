@@ -3,9 +3,10 @@ import jwt from "jsonwebtoken";
 
 import { StatusCodes } from "http-status-codes";
 
-import { ResponseError } from "@common";
+import { ResponseError, UnauthError } from "@common";
+import { Auth } from "@models/types";
 
-export function loginCheck(
+export async function loginCheck(
   req: Express.Request,
   res: Express.Response,
   next: Express.NextFunction
@@ -19,12 +20,23 @@ export function loginCheck(
     );
 
   try {
-    const tokenCheck = jwt.verify(token, secret) as any;
+    const authByToken = jwt.verify(token, secret) as Auth;
+    const auth = await Auth.find(authByToken.name);
+    req.auth = auth;
+
+    return next();
   } catch (err) {
-    return next(
-      new ResponseError(StatusCodes.UNAUTHORIZED, "올바르지 않은 접근 입니다.")
-    );
+    return next(err);
   }
+}
+
+export async function adminCheck(
+  req: Express.Request,
+  res: Express.Response,
+  next: Express.NextFunction
+) {
+  const auth = req.auth;
+  if (!auth || auth.role !== "ADMIN") return next(UnauthError);
 
   return next();
 }

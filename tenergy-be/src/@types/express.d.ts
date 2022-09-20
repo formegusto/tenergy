@@ -3,7 +3,7 @@ declare namespace Express {
     auth: {
       _id?: string;
       name: string;
-      role: "USER" | "ADMIN";
+      role: "HOUSEHOLD" | "ADMIN";
     };
   }
 }
