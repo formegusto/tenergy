@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@models": [
+                "./models"
+            ],
+            "@models/*": [
+                "./models/*"
+            ],
+            "@routes": [
+                "./routes"
+            ],
+            "@routes/*": [
+                "./routes/*"
+            ],
+            "@utils": [
+                "./utils"
+            ],
+            "@utils/*": [
+                "./utils/*"
+            ],
+            "@common": [
+                "./common"
+            ],
+            "@common/*": [
+                "./common/*"
+            ],
+            "@mw": [
+                "./middlewares"
+            ],
+            "@mw/*": [
+                "./middlewares/*"
+            ]
+        }
+    }
+}
