@@ -1,8 +1,4 @@
-export interface TradeResult {
-  name: string;
-  quantity: number;
-  price: number;
-}
+import { Schema } from "mongoose";
 
 export interface CompareHouseholdItem {
   kwh: number;
@@ -10,7 +6,8 @@ export interface CompareHouseholdItem {
   public: number;
 }
 
-export interface CompareHousehold {
+export interface ICompare {
+  _id?: Schema.Types.ObjectId;
   name: string;
   before: CompareHouseholdItem;
   after: CompareHouseholdItem;

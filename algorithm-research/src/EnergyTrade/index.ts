@@ -69,15 +69,16 @@ class EnergyTrade implements Iterator<TradeResult> {
       _.groupBy(this.results, (result) => result.name),
       (value) => _.sumBy(value, (v) => v.price)
     );
-
+    const totalTradeUsage = _.sumBy(this.results, ({ quantity }) => quantity);
     const sellerBenefitTotal = _.sum(_.values(buyerTotalPrices));
-    const sellerBenefit = Math.round(sellerBenefitTotal / this.sellers.length);
+    const unitSellerBenefit = Math.round(sellerBenefitTotal / totalTradeUsage);
+    // const sellerBenefit = Math.round(sellerBenefitTotal / this.sellers.length);
 
     // Seller kwh 변경
     // seller 객체에 benefit 주입
     this.sellers.forEach((seller) => {
       seller.tradeKwh = -(nuginMax - seller.kwh);
-      seller.benefit = sellerBenefit;
+      seller.benefit = seller.tradeKwh * -1 * unitSellerBenefit;
     });
 
     // buyer 객체에 benefit 주입

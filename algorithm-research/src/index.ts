@@ -13,11 +13,12 @@ import { dbConnect, dbDisconnect } from "./models";
   // await eTrade.save();
 
   const analyzer = eTrade.clean();
-  console.log(analyzer);
+  // console.log(analyzer);
 
-  console.log(analyzer.householdPartBill);
-  console.log(analyzer.publicPartBill);
+  // console.log(analyzer.householdPartBill);
+  // console.log(analyzer.publicPartBill);
   console.log(analyzer.householdCompare);
+  await analyzer.save();
 
   // console.log(eTrade.results);
 

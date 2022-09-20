@@ -1,18 +1,30 @@
-import { HouseholdModel, TimeMeterDataModel, EnergyTradeModel } from "@models";
-import { TimeMeterData, Household, IEnergyTrade } from "@models/types";
+import {
+  HouseholdModel,
+  TimeMeterDataModel,
+  EnergyTradeModel,
+  CompareModel,
+} from "@models";
+import {
+  TimeMeterData,
+  Household,
+  IEnergyTrade,
+  ICompare,
+} from "@models/types";
 import _ from "lodash";
 
 export class APT {
   publicPercentage: number;
   householdCount?: number;
+  householdPart?: number;
 
-  // simple data : Chart와 같은 간단 정보만 필요할 경우
+  // Pattern Type Data
   timeMeterDatas?: Array<TimeMeterData>;
 
-  // detail data
   self?: Household;
   households?: Array<Household>;
   trades?: Array<IEnergyTrade>;
+
+  compares?: Array<ICompare>;
 
   constructor(publicPercentage?: number) {
     this.publicPercentage = publicPercentage ? publicPercentage : 30;
@@ -26,6 +38,9 @@ export class APT {
     );
     this.timeMeterDatas = _.map(_timeMeterDatas, TimeMeterData.getFromDoc);
     this.householdCount = this.timeMeterDatas[0].data.length;
+    this.householdPart = Math.round(
+      _.sumBy(this.timeMeterDatas, (timeMeter) => timeMeter.sum)
+    );
   }
 
   async addHouseholds() {
@@ -38,17 +53,26 @@ export class APT {
       []
     );
     this.householdCount = this.households.length;
+    this.householdPart = Math.round(_.sumBy(this.households, ({ kwh }) => kwh));
   }
 
   async addTrades() {
     this.trades = await EnergyTradeModel.find();
   }
 
+  async addCompares() {
+    this.compares = await CompareModel.find();
+    this.householdCount = this.compares.length;
+    this.householdPart = Math.round(
+      _.sumBy(this.compares, ({ after }) => after.kwh)
+    );
+  }
+
   /* 사용량 파트 */
   // 아파트 전체 사용량
   get usage() {
     return Math.round(
-      (this.householdPart * 100) / (100 - this.publicPercentage)
+      (this.householdPart! * 100) / (100 - this.publicPercentage)
     );
   }
   get meanUsage() {
@@ -56,20 +80,13 @@ export class APT {
   }
 
   // 세대부 사용량
-  get householdPart() {
-    if (this.households)
-      return Math.round(_.sumBy(this.households, ({ kwh }) => kwh));
-    return Math.round(
-      _.sumBy(this.timeMeterDatas, (timeMeter) => timeMeter.sum)
-    );
-  }
   get meanHouseholdPart() {
-    return Math.round(this.householdPart / this.householdCount!);
+    return Math.round(this.householdPart! / this.householdCount!);
   }
 
   // 공용부 사용량
   get publicPart() {
-    return this.usage - this.householdPart;
+    return this.usage - this.householdPart!;
   }
   get meanPublicPart() {
     return Math.round(this.publicPart / this.householdCount!);

@@ -4,7 +4,6 @@ import { APT } from "@models/APT/types";
 import _ from "lodash";
 import { StatusCodes } from "http-status-codes";
 import { ResGetChartBody } from "./types";
-import { APTBuilder } from "@models";
 
 const routes = Express.Router();
 
@@ -14,13 +13,31 @@ routes.get(
   loginCheck,
   adminCheck,
   async (req: Express.Request, res: Express.Response) => {
-    const builder = new APTBuilder();
-    await builder.setDetail();
-    const apt = builder.get();
+    const apt = new APT();
 
-    console.log(apt.households);
+    await apt.addCompares();
+    const compares = apt.compares!;
+    const householdsBill = _.sumBy(compares, ({ after }) => after.bill);
+    const publicBill = _.sumBy(compares, ({ after }) => after.public);
 
-    return res.send("test");
+    await apt.addTrades();
+    const trades = apt.trades!;
+    const tradeBill = Math.round(_.sumBy(trades, ({ price }) => price));
+
+    return res.status(StatusCodes.OK).json({
+      price: {
+        apt: Math.round(householdsBill + publicBill),
+        household: Math.round(householdsBill),
+        public: publicBill,
+        trade: tradeBill,
+      },
+      usage: {
+        apt: apt.meanUsage,
+        household: apt.meanHouseholdPart - apt.meanTradePart,
+        public: apt.meanPublicPart,
+        trade: apt.meanTradePart,
+      },
+    });
   }
 );
 
@@ -40,10 +57,8 @@ routes.get(
   loginCheck,
   adminCheck,
   async (req: Express.Request, res: Express.Response<ResGetChartBody>) => {
-    const builder = new APTBuilder();
-    await builder.setSimple();
-
-    const apt = builder.get();
+    const apt = new APT();
+    await apt.addTimeMeterDatas();
     const chartDatas = _.map(apt.timeMeterDatas, (timeMeter) => timeMeter.sum);
 
     return res.status(StatusCodes.OK).json({
