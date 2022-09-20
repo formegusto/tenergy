@@ -6,6 +6,7 @@ import { Household } from "../models/types";
 import { demandFunction } from "./utils";
 import { TradeResult } from "./types";
 import TradeAnalyzer from "./analyzer";
+import { EnergyTradeModel } from "../models";
 
 class EnergyTrade implements Iterator<TradeResult> {
   month: number;
@@ -92,6 +93,10 @@ class EnergyTrade implements Iterator<TradeResult> {
       this.apt,
       new APT(tradeHouseholds, this.apt.publicPercentage)
     );
+  }
+
+  async save() {
+    for (let result of this.results) await EnergyTradeModel.create(result);
   }
 
   settingRole() {

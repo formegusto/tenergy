@@ -44,7 +44,7 @@ class TradeAnalyzer {
         name: before.name,
         before: { kwh: before.kwh, price: beforeBill },
         after: { kwh: after!.kwh, price: afterBill },
-        err: beforeBill - afterBill,
+        err: afterBill - beforeBill,
       };
     }) as CompareHousehold[];
   }
