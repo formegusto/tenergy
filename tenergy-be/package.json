@@ -35,6 +35,7 @@
     "@routes": "dist/routes",
     "@utils": "dist/utils",
     "@common": "dist/common",
-    "@mw": "dist/middlewares"
+    "@mw": "dist/middlewares",
+    "@libs": "dist/libs"
   }
 }

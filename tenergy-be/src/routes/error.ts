@@ -7,6 +7,7 @@ export default function errorHandler(
   res: Express.Response,
   next: Express.NextFunction
 ) {
+  console.error(err);
   if (!err.hasOwnProperty("statusCode")) return next(ServerError);
 
   return res.status(err.statusCode).json({
