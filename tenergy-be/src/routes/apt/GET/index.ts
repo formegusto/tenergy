@@ -4,6 +4,8 @@ import { APT } from "@models/APT/types";
 import _ from "lodash";
 import { StatusCodes } from "http-status-codes";
 import { ResGetChartBody } from "./types";
+import { NameLabelingData, TimeMeterData } from "@models/types";
+import { DAYS } from "@common/types";
 
 const routes = Express.Router();
 
@@ -124,7 +126,43 @@ routes.get(
   loginCheck,
   adminCheck,
   async (req: Express.Request, res: Express.Response) => {
-    return res.send("test");
+    const TIMESIZE = 3;
+    const apt = new APT();
+    await apt.addHouseholds();
+    const timeIdx = await TimeMeterData.getTimeIndex();
+
+    const householdPats = _.map(apt.households, (household) => household.pat);
+    const zipPats = _.zip.apply(null, householdPats);
+    let time = 0;
+    const times: Array<NameLabelingData> = [];
+    while (time < 24) {
+      const _times = _.filter(
+        zipPats,
+        (_, idx) =>
+          timeIdx[idx].getUTCHours() >= time &&
+          timeIdx[idx].getUTCHours() < time + TIMESIZE
+      );
+      times.push({
+        name: `${time}~${time + TIMESIZE - 1}`,
+        value: Math.round(_.sum(_.flatten(_times))),
+      });
+
+      time += TIMESIZE;
+    }
+
+    const days: Array<NameLabelingData> = [];
+    DAYS.forEach((day, dayIdx) => {
+      const _days = _.filter(
+        zipPats,
+        (_, idx) => timeIdx[idx].getUTCDay() === dayIdx
+      );
+      days.push({ name: day, value: Math.round(_.sum(_.flatten(_days))) });
+    });
+
+    return res.status(StatusCodes.OK).json({
+      times,
+      days,
+    });
   }
 );
 
