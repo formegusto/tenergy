@@ -1,26 +1,29 @@
 import dotenv from "dotenv";
+import distributorUsage from "./distributorUsage";
 import EnergyTrade from "./EnergyTrade";
 import { dbConnect, dbDisconnect } from "./models";
 
-(async function () {
-  dotenv.config();
-  await dbConnect();
+// (async function () {
+//   dotenv.config();
+//   await dbConnect();
 
-  const eTrade = await EnergyTrade.init(5);
+//   const eTrade = await EnergyTrade.init(5);
 
-  for (let _ of eTrade);
+//   for (let _ of eTrade);
 
-  // await eTrade.save();
+//   // await eTrade.save();
 
-  const analyzer = eTrade.clean();
-  // console.log(analyzer);
+//   const analyzer = eTrade.clean();
+//   // console.log(analyzer);
 
-  // console.log(analyzer.householdPartBill);
-  // console.log(analyzer.publicPartBill);
-  console.log(analyzer.householdCompare);
-  await analyzer.save();
+//   // console.log(analyzer.householdPartBill);
+//   // console.log(analyzer.publicPartBill);
+//   console.log(analyzer.householdCompare);
+//   // await analyzer.save();
 
-  // console.log(eTrade.results);
+//   // console.log(eTrade.results);
 
-  dbDisconnect();
-})();
+//   dbDisconnect();
+// })();
+
+distributorUsage();

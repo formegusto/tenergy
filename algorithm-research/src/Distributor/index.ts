@@ -28,14 +28,14 @@ class Distributor {
   async build() {
     this.publicPrice = this.apt.publicBill;
 
-    // const { groups, centroids } = await this.tdKMeans.result();
-    // const centroidsSum = _.map(centroids, (centroid) =>
-    //   _.sumBy(centroid, ({ value }) => value)
-    // );
-    // const centroidsSumTotal = _.sum(centroidsSum);
-    // const contributions = _.map(centroidsSum, (sum) => sum / centroidsSumTotal);
-    // this.contributions = contributions;
-    // this.groups = _.map(groups, ({ value }) => value);
+    const { groups, centroids } = await this.tdKMeans.result();
+    const centroidsSum = _.map(centroids, (centroid) =>
+      _.sumBy(centroid, ({ value }) => value)
+    );
+    const centroidsSumTotal = _.sum(centroidsSum);
+    const contributions = _.map(centroidsSum, (sum) => sum / centroidsSumTotal);
+    this.contributions = contributions;
+    this.groups = _.map(groups, ({ value }) => value);
   }
 
   // 기여도 요금
