@@ -22,6 +22,8 @@ export class Household {
   benefit: number;
   loss: number;
 
+  group?: number;
+
   constructor(name: string, pat: number[], conts: number[]) {
     this.month = 1;
     this.name = name;
