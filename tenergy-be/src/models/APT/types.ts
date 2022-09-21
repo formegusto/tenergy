@@ -47,13 +47,14 @@ export class APT {
     const householdDocs = await HouseholdModel.find({}, { _id: 0, name: 1 });
     const householdNames = _.map(householdDocs, ({ name }) => name);
     this.households = await Promise.all(_.map(householdNames, Household.init));
+    this.householdCount = this.households.length;
+    this.householdPart = Math.round(_.sumBy(this.households, ({ kwh }) => kwh));
+
     this.self = new Household(
       "APT",
       [Math.round(this.usage / this.households.length)],
       []
     );
-    this.householdCount = this.households.length;
-    this.householdPart = Math.round(_.sumBy(this.households, ({ kwh }) => kwh));
   }
 
   async addTrades() {
@@ -62,9 +63,19 @@ export class APT {
 
   async addCompares() {
     this.compares = await CompareModel.find();
+    this.households = _.map(
+      this.compares,
+      ({ name, after }) => new Household(name, [after.kwh], [])
+    );
     this.householdCount = this.compares.length;
     this.householdPart = Math.round(
       _.sumBy(this.compares, ({ after }) => after.kwh)
+    );
+
+    this.self = new Household(
+      "APT",
+      [Math.round(this.usage / this.households.length)],
+      []
     );
   }
 
@@ -108,5 +119,19 @@ export class APT {
   }
   get publicBill() {
     return this.bill - this.householdBill;
+  }
+  get tradeBill() {
+    return this.trades
+      ? Math.round(_.sumBy(this.trades, ({ price }) => price))
+      : 0;
+  }
+
+  // Extensions
+  get householdsSteps() {
+    return _.map(this.households, (household) => household.steps);
+  }
+
+  get steps() {
+    return _.map(this.self!.steps, (step) => step * this.households!.length);
   }
 }
