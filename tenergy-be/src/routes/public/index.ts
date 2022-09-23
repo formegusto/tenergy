@@ -1,3 +1,3 @@
-import { AutoRoutes } from "@routes/common";
+import { AutoRoutes, setAdminCheckMW } from "@routes/common";
 
-export default new AutoRoutes(__dirname).routes;
+export default new AutoRoutes(__dirname, setAdminCheckMW).routes;
