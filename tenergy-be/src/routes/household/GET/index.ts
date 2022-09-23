@@ -1,3 +1,4 @@
+import Distributor from "@libs/Distributor";
 import { CompareModel } from "@models";
 import { Household, TimeLabelingData, TimeMeterData } from "@models/types";
 import Express from "express";
@@ -41,7 +42,30 @@ routes.get("/", async (req: Express.Request, res: Express.Response) => {
 });
 
 routes.get("/public", async (req: Express.Request, res: Express.Response) => {
-  return res.send("공동설비 기도 그룹 소개");
+  const { name } = req.auth;
+  const distributor = await Distributor.init();
+  await distributor.build();
+
+  const publicPrice = distributor.publicPrice;
+  const priPublicPrice = publicPrice! / distributor.apt.householdCount!;
+  console.log(priPublicPrice);
+
+  const myIdx = _.findIndex(
+    distributor.apt.compares,
+    ({ name: compareName }) => compareName === name
+  );
+  const myGroup = distributor.groups![myIdx];
+  const myPrice = distributor.distribute[myIdx];
+
+  return res.status(StatusCodes.OK).json({
+    my: {
+      group: myGroup,
+      price: myPrice,
+      contribution: distributor.contributions![myGroup],
+      err: myPrice - priPublicPrice,
+    },
+    contributions: distributor.contributions,
+  });
 });
 
 routes.get("/trade", async (req: Express.Request, res: Express.Response) => {
