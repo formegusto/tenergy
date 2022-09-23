@@ -3,7 +3,7 @@ import { CompareModel } from "@models";
 import { Household, TimeLabelingData, TimeMeterData } from "@models/types";
 import Express from "express";
 import { StatusCodes } from "http-status-codes";
-import _ from "lodash";
+import _, { before } from "lodash";
 
 const routes = Express.Router();
 
@@ -69,7 +69,20 @@ routes.get("/public", async (req: Express.Request, res: Express.Response) => {
 });
 
 routes.get("/trade", async (req: Express.Request, res: Express.Response) => {
-  return res.send("거래 전 후 비교");
+  const { name } = req.auth;
+  const compare = await CompareModel.findOne({ name });
+
+  const myBefore = new Household(name, [compare!.before.kwh], []);
+  const myAfter = new Household(name, [compare!.after.kwh], []);
+
+  const tradePrice = compare!.after.bill - myAfter.bill;
+
+  return res.status(StatusCodes.OK).json({
+    beforePrice: myBefore.bill,
+    afterPrice: myAfter.bill,
+    tradePrice,
+    benefit: myBefore.bill - (myAfter.bill + tradePrice),
+  });
 });
 
 routes.get("/feedback", async (req: Express.Request, res: Express.Response) => {
