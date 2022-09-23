@@ -41,9 +41,22 @@ class Feedback {
             householdConts[parseInt(time)]
         );
         _.forEach(feedbackTimes, (time) => {
-          feedback[parseInt(time)] =
-            _.meanBy(householdPat[parseInt(time)], ({ value }) => value) -
-            _.meanBy(centroidPat[parseInt(time)], ({ value }) => value);
+          if (_.has(feedback, time)) {
+            const count = feedback[parseInt(time)].count;
+            feedback[parseInt(time)] = {
+              value:
+                _.meanBy(householdPat[parseInt(time)], ({ value }) => value) -
+                _.meanBy(centroidPat[parseInt(time)], ({ value }) => value),
+              count: count + 1,
+            };
+          } else {
+            feedback[parseInt(time)] = {
+              value:
+                _.meanBy(householdPat[parseInt(time)], ({ value }) => value) -
+                _.meanBy(centroidPat[parseInt(time)], ({ value }) => value),
+              count: 1,
+            };
+          }
         });
       }
 
@@ -77,9 +90,22 @@ class Feedback {
         );
         console.log(householdConts, centroidConts);
         _.forEach(feedbackDays, (day) => {
-          feedback[parseInt(day)] =
-            _.meanBy(householdPat[parseInt(day)], ({ value }) => value) -
-            _.meanBy(centroidPat[parseInt(day)], ({ value }) => value);
+          if (_.has(feedback, day)) {
+            const count = feedback[parseInt(day)].count;
+            feedback[parseInt(day)] = {
+              value:
+                _.meanBy(householdPat[parseInt(day)], ({ value }) => value) -
+                _.meanBy(centroidPat[parseInt(day)], ({ value }) => value),
+              count: count + 1,
+            };
+          } else {
+            feedback[parseInt(day)] = {
+              value:
+                _.meanBy(householdPat[parseInt(day)], ({ value }) => value) -
+                _.meanBy(centroidPat[parseInt(day)], ({ value }) => value),
+              count: 1,
+            };
+          }
         });
       }
 

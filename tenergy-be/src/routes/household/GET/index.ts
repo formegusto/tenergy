@@ -1,4 +1,6 @@
 import Distributor from "@libs/Distributor";
+import Feedback from "@libs/Feedback";
+import { FeedbackTarget, IFeedbackTarget } from "@libs/Feedback/types";
 import { CompareModel } from "@models";
 import { Household, TimeLabelingData, TimeMeterData } from "@models/types";
 import Express from "express";
@@ -86,7 +88,125 @@ routes.get("/trade", async (req: Express.Request, res: Express.Response) => {
 });
 
 routes.get("/feedback", async (req: Express.Request, res: Express.Response) => {
-  return res.send("전기절약 피드백");
+  // day or time
+  const { name } = req.auth;
+  console.log(name);
+  const { type } = req.query;
+
+  const feedback = await Feedback.init(1);
+  const household = feedback.tdKMeans.getHousehold!(name);
+  const myGroup = household!.self.group!;
+
+  const centroidsFeedbackTargets =
+    type === "time"
+      ? await feedback.tdKMeans.times(myGroup)
+      : await feedback.tdKMeans.days(myGroup);
+  const { pat } = centroidsFeedbackTargets[0];
+  const patKeys = _.keys(pat);
+  const size = parseInt(patKeys[1]) - parseInt(patKeys[0]);
+
+  let proposal;
+  let myFeedbackTarget: IFeedbackTarget;
+  let testFeedbackTarget: IFeedbackTarget;
+  if (type === "time") {
+    proposal = await feedback.time(name);
+    myFeedbackTarget = new FeedbackTarget(household!.feedbackMaterial).getTimes(
+      feedback.tdKMeans.size
+    );
+  } else {
+    proposal = await feedback.day(name);
+    myFeedbackTarget = new FeedbackTarget(
+      household!.feedbackMaterial
+    ).getDays();
+  }
+
+  testFeedbackTarget = _.cloneDeep(myFeedbackTarget);
+
+  let dangerProposal: string[] = [],
+    warningProposal: string[] = [];
+
+  _.forIn(proposal, ({ count }, key) => {
+    let centroidsIdx = 0;
+    if (count === 1) {
+      centroidsIdx = 1;
+      warningProposal.push(key);
+    } else dangerProposal.push(key);
+
+    if (!centroidsFeedbackTargets[centroidsIdx].pat[parseInt(key)]) {
+      console.log("걸렸다 요놈");
+      console.log(centroidsFeedbackTargets[centroidsIdx].pat[parseInt(key)]);
+      console.log(centroidsFeedbackTargets[centroidsIdx].pat);
+      console.log(type, key);
+    }
+
+    testFeedbackTarget.pat[parseInt(key)] =
+      centroidsFeedbackTargets[centroidsIdx].pat[parseInt(key)];
+  });
+
+  const beforeUsage = Math.round(
+    _.sumBy(_.flatten(_.values(myFeedbackTarget.pat)), ({ value }) => value)
+  );
+  const afterUsage = Math.round(
+    _.sumBy(_.flatten(_.values(testFeedbackTarget.pat)), ({ value }) => value)
+  );
+  const beforePrice = new Household(name, [beforeUsage], []).bill;
+  const afterPrice = new Household(name, [afterUsage], []).bill;
+  // console.log(
+  //   _.sumBy(
+  //     _.flatten(_.values(myFeedbackTarget)) as Array<TimeLabelingData>,
+  //     ({ value }) => value
+  //   )
+  // );
+  // console.log(
+  //   _.sumBy(
+  //     _.flatten(_.values(testFeedbackTarget)) as Array<TimeLabelingData>,
+  //     ({ value }) => value
+  //   )
+  // );
+
+  const chunkSize = type === "day" ? 24 : size;
+  let patterns: any = {};
+  _.forIn(myFeedbackTarget.pat, (value, key) => {
+    let myPattern = _.map(value, ({ value: v }) => v);
+    let centroidPattern: number[];
+    if (key in warningProposal) {
+      console.log(key, "warning");
+
+      centroidPattern = _.map(
+        centroidsFeedbackTargets[0].pat[parseInt(key)],
+        ({ value: v }) => v
+      );
+    } else {
+      centroidPattern = _.map(
+        centroidsFeedbackTargets[1].pat[parseInt(key)],
+        ({ value: v }) => v
+      );
+    }
+
+    patterns[key] = {
+      my: _.map(_.zip.apply(null, _.chunk(myPattern, chunkSize)), _.mean),
+      centroids: _.map(
+        _.zip.apply(null, _.chunk(centroidPattern, chunkSize)),
+        _.mean
+      ),
+    };
+  });
+
+  return res.status(StatusCodes.OK).json({
+    type,
+    size,
+    dangerProposal,
+    warningProposal,
+    price: {
+      before: beforePrice,
+      after: afterPrice,
+    },
+    usage: {
+      before: beforeUsage,
+      after: afterUsage,
+    },
+    patterns,
+  });
 });
 
 export default routes;

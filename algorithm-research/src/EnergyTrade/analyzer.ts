@@ -46,7 +46,7 @@ class TradeAnalyzer {
         before: { kwh: before.kwh, bill: before.bill, public: beforePriPublic },
         after: { kwh: after!.kwh, bill: after!.bill, public: afterPriPublic },
         err: {
-          kwh: before.kwh - after!.kwh,
+          kwh: after!.kwh - before.kwh,
           bill: after!.bill - before.bill,
           public: afterPriPublic - beforePriPublic,
         },

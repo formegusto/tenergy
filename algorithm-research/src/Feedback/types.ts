@@ -3,7 +3,7 @@ import _ from "lodash";
 
 // 이 시간에 평균 ~정도 아끼면 좋을 거 같아.
 export interface IFeedback {
-  [key: number]: number;
+  [key: number]: any;
 }
 
 export interface IFeedbackTargetMaterial {
