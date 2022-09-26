@@ -16,4 +16,5 @@ export const ContentWrap = styled.div`
   min-height: 780px;
 
   padding: 48px 32px;
+  margin: 0 0 0 316px;
 `;

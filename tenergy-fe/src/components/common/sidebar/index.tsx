@@ -1,14 +1,18 @@
-import { Logo } from "@assets";
-import Nav from "./nav";
+import { useLocation } from "react-router-dom";
+import AuthComponent from "./auth";
 import SimpleChart from "./simpleChart";
 import { SideBarWrap } from "./styles";
 
 export function SideBar() {
+  const { pathname } = useLocation();
+
   return (
-    <SideBarWrap className="bg-slate-900 shadow box-border pt-12 flex flex-col items-center relative">
-      <img className="logo" src={Logo.LogoX3} alt="tenergy-logo" />
-      <Nav />
-      <SimpleChart />
+    <SideBarWrap
+      className={`fixed bg-slate-900 shadow box-border pt-12 flex flex-col items-center ${
+        pathname === "/auth" ? "auth" : ""
+      }`}
+    >
+      {pathname === "/auth" ? <AuthComponent /> : <SimpleChart />}
     </SideBarWrap>
   );
 }
