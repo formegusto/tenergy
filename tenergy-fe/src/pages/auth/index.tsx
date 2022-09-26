@@ -1,3 +1,5 @@
+import { AuthComponent } from "@component";
+
 export function AuthPage() {
-  return <>인증</>;
+  return <AuthComponent />;
 }
