@@ -21,8 +21,6 @@ function NavItem({ title, to, value }: INavItem) {
   );
 }
 
-const ItemWrap = styled.div``;
-
 function Nav() {
   return (
     <NavWrap className="navs flex flex-col gap-y-3 mt-12">
