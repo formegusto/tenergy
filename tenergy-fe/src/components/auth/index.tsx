@@ -1,13 +1,23 @@
 import { p2 } from "@styles/font";
 import { AuthWrap } from "./styles";
+import { AuthComponentProps } from "./types";
 
-export function AuthComponent() {
+export function AuthComponent({
+  name,
+  onChange,
+  onSubmit,
+}: AuthComponentProps) {
   return (
-    <AuthWrap className="flex flex-row justify-center items-center">
+    <AuthWrap
+      className="flex flex-row justify-center items-center"
+      onSubmit={onSubmit}
+    >
       <input
         type="text"
         placeholder="가구명을 적어주세요."
         className="w-96 h-12  box-border bg-transparent border-b-2 border-slate-300 px-3 text-slate-200"
+        onChange={onChange}
+        value={name}
       />
       <button
         className={

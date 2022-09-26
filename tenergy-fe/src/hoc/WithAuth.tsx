@@ -9,6 +9,7 @@ export function WithAuth(Component: React.ComponentType) {
     const navigate = useNavigate();
 
     React.useEffect(() => {
+      console.log(auth);
       if (!auth) {
         navigate("/auth");
       }

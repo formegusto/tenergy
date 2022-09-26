@@ -11,6 +11,12 @@
             "@component/*": [
                 "./components/*"
             ],
+            "@container": [
+                "./containers"
+            ],
+            "@container/*": [
+                "./containers/*"
+            ],
             "@assets": [
                 "./assets"
             ],
@@ -25,6 +31,12 @@
             ],
             "@hoc": [
                 "./hoc"
+            ],
+            "@api": [
+                "./api"
+            ],
+            "@hook": [
+                "./hooks"
             ]
         }
     }

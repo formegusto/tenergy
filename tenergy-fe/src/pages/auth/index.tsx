@@ -1,5 +1,5 @@
-import { AuthComponent } from "@component";
+import { AuthContainer } from "@container";
 
 export function AuthPage() {
-  return <AuthComponent />;
+  return <AuthContainer />;
 }
