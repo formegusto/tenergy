@@ -1,7 +1,7 @@
 export const h1 = "text-5xl font-bold";
 export const h2 = "text-4xl font-medium";
 export const h3 = "text-3xl font-medium";
-export const h4 = "test-2xl font-medium";
+export const h4 = "text-2xl font-medium";
 export const h5 = "text-xl font-medium";
 
 export const p1 = "text-xl font-normal";
