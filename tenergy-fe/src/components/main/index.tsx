@@ -2,6 +2,7 @@ import { DangerBarChart } from "@component/common";
 import { DangerChartProps } from "@component/common/types";
 import { h3, h5 } from "@styles/font";
 import APTCard from "./APTCard";
+import PublicCard from "./PublicCard";
 import TradeCard from "./TradeCard";
 import { MainComponentProps } from "./types";
 
@@ -23,6 +24,7 @@ export function MainComponent({
       <div className="datacard-group-wrap flex flex-row gap-x-16">
         <APTCard />
         <TradeCard />
+        <PublicCard />
         {/* <DataCard type="apt" />
         <DataCard type="trade" />
         <DataCard type="public" /> */}
