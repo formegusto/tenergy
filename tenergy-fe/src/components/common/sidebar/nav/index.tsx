@@ -2,6 +2,7 @@ import { INavItem, NavItems } from "./items";
 import styled from "styled-components";
 import { p3 } from "@styles/font";
 import { NavLink } from "react-router-dom";
+import { NavProps } from "./types";
 
 function NavItem({ title, to, value }: INavItem) {
   return (
@@ -21,11 +22,15 @@ function NavItem({ title, to, value }: INavItem) {
   );
 }
 
-function Nav() {
+function Nav({ price }: NavProps) {
   return (
     <NavWrap className="navs flex flex-col gap-y-3 mt-12">
       {NavItems.map((item, idx) => (
-        <NavItem {...item} key={`nav-${idx}`} />
+        <NavItem
+          {...item}
+          value={idx !== 0 ? price[idx - 1] : undefined}
+          key={`nav-${idx}`}
+        />
       ))}
     </NavWrap>
   );
