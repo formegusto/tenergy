@@ -1,5 +1,5 @@
 import { IPart } from "@component/common/types";
-import { DetailData } from "@store/types";
+import { DetailData, NameLabelData } from "@store/types";
 
 export interface ResGetChart {
   total: number;
@@ -8,4 +8,9 @@ export interface ResGetChart {
 
 export type ResGetAptDetail = {
   [key in IPart]: DetailData;
+};
+
+export type ResGetAnalysis = {
+  times: NameLabelData[];
+  days: NameLabelData[];
 };

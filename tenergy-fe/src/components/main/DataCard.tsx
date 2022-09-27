@@ -31,6 +31,7 @@ function DataCard({
       <div className="flex flex-col values-group mt-8 gap-y-1">
         {_.map(_.zip(keys, values), ([key, value]) => (
           <div
+            key={type + "-data-card-" + key}
             className={
               p2 +
               [" value-group-row", "flex", "flex-row", "justify-between"].join(

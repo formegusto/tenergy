@@ -16,3 +16,8 @@ export interface DetailData {
   keys: string[];
   values: number[];
 }
+
+export interface NameLabelData {
+  name: string;
+  value: number;
+}
