@@ -91,7 +91,7 @@ export function Doughnut({
         viewBox={`0 0 ${RADIUS * 2 + STROKEWIDTH} ${RADIUS * 2 + STROKEWIDTH}`}
         xmlns="https://www.w3.org/2000/svg"
       />
-      <Title className="text-slate-50">368</Title>
+      <Title className="text-slate-50">{aptMean.apt}</Title>
     </Wrap>
   );
 }

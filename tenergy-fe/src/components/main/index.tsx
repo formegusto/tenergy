@@ -1,7 +1,8 @@
 import { DangerBarChart } from "@component/common";
 import { DangerChartProps } from "@component/common/types";
 import { h3, h5 } from "@styles/font";
-import DataCard from "./DataCard";
+import APTCard from "./APTCard";
+import TradeCard from "./TradeCard";
 import { MainComponentProps } from "./types";
 
 export function MainComponent({
@@ -20,9 +21,11 @@ export function MainComponent({
       </h5>
       <DangerBarChart datas={datas} />
       <div className="datacard-group-wrap flex flex-row gap-x-16">
-        <DataCard type="apt" />
+        <APTCard />
+        <TradeCard />
+        {/* <DataCard type="apt" />
         <DataCard type="trade" />
-        <DataCard type="public" />
+        <DataCard type="public" /> */}
       </div>
     </div>
   );
