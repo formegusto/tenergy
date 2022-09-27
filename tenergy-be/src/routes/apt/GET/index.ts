@@ -100,10 +100,11 @@ routes.get(
     const apt = new APT();
     await apt.addTimeMeterDatas();
     const chartDatas = _.map(apt.timeMeterDatas, (timeMeter) => timeMeter.sum);
+    const usages = _.chunk(chartDatas, 24);
 
     return res.status(StatusCodes.OK).json({
       total: apt.usage,
-      usages: chartDatas,
+      usages: _.map(usages, _.sum),
     });
   }
 );
