@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export function MainContainer() {
   const token = useToken();
-  useQuery(["getChart", token], () => getChart(token!), {
+  const { data } = useQuery(["getChart", token], () => getChart(token!), {
     enabled: token !== null,
   });
 
-  return <MainComponent />;
+  return data ? <MainComponent datas={data.usages} /> : <></>;
 }

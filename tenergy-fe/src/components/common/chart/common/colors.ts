@@ -1,4 +1,4 @@
-import { IPartIn } from "./types";
+import { IDangerIn, IPartIn } from "./types";
 
 export const StrokePalette: IPartIn = {
   apt: "",
@@ -12,6 +12,12 @@ export const FillPalette: IPartIn = {
   household: "fill-teal-200",
   trading: "fill-teal-500",
   public: "fill-cyan-400",
+};
+
+export const DangerPalette: IDangerIn = {
+  danger: "stroke-rose-400",
+  normal: "stroke-cyan-400",
+  good: "stroke-teal-400",
 };
 
 export const PartToKR: IPartIn = {
