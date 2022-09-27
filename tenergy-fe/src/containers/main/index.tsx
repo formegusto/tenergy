@@ -9,5 +9,9 @@ export function MainContainer() {
     enabled: token !== null,
   });
 
-  return data ? <MainComponent datas={data.usages} /> : <></>;
+  return data ? (
+    <MainComponent total={data.total} datas={data.usages} />
+  ) : (
+    <></>
+  );
 }

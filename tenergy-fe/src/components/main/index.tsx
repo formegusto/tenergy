@@ -2,8 +2,12 @@ import { DangerBarChart } from "@component/common";
 import { DangerChartProps } from "@component/common/types";
 import { h3, h5 } from "@styles/font";
 import DataCard from "./DataCard";
+import { MainComponentProps } from "./types";
 
-export function MainComponent({ datas }: DangerChartProps) {
+export function MainComponent({
+  total,
+  datas,
+}: DangerChartProps & MainComponentProps) {
   return (
     <div className="main-wrap flex flex-col">
       <div className="flex flex-row items-end gap-x-2.5 mb-3">
@@ -12,12 +16,12 @@ export function MainComponent({ datas }: DangerChartProps) {
       </div>
       <div className="w-12 h-1 bg-teal-200 mb-1" />
       <h5 className={h5 + [" text-slate-700", "mb-5"].join(" ")}>
-        {(39744).toLocaleString("ko-KR")}kWh
+        {total.toLocaleString("ko-KR")}kWh
       </h5>
       <DangerBarChart datas={datas} />
       <div className="datacard-group-wrap flex flex-row gap-x-16">
         <DataCard type="apt" />
-        <DataCard type="trading" />
+        <DataCard type="trade" />
         <DataCard type="public" />
       </div>
     </div>

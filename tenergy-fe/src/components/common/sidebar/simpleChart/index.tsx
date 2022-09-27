@@ -14,7 +14,7 @@ function SimpleChart() {
           aptMean={{
             apt: 368,
             household: 200,
-            trading: 68,
+            trade: 68,
             public: 100,
           }}
         />
@@ -22,7 +22,7 @@ function SimpleChart() {
           aptMean={{
             apt: 368,
             household: 200,
-            trading: 68,
+            trade: 68,
             public: 100,
           }}
         />

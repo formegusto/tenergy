@@ -5,7 +5,7 @@ import { PartToKR, StrokePalette } from "../common";
 import { IPart } from "../common/types";
 import { StackBarViewProps } from "./types";
 
-const SEQ: IPart[] = ["household", "trading", "public"];
+const SEQ: IPart[] = ["household", "trade", "public"];
 
 function StackBarView({ pkey, value }: StackBarViewProps) {
   return (

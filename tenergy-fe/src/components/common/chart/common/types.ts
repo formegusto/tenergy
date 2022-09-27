@@ -1,4 +1,4 @@
-export type IPart = "household" | "apt" | "public" | "trading";
+export type IPart = "household" | "apt" | "public" | "trade";
 export type IPartIn = {
   [key in IPart]: any;
 };

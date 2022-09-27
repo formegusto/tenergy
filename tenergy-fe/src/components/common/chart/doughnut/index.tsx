@@ -43,7 +43,7 @@ export function Doughnut({
   const refSVG = React.useRef<SVGSVGElement>(null);
 
   React.useEffect(() => {
-    const seq: IPart[] = ["household", "trading", "public"];
+    const seq: IPart[] = ["household", "trade", "public"];
     const datas = _.range(0, 3).map(
       (idx: number) => (aptMean as any)[seq[idx]]
     );
@@ -53,7 +53,7 @@ export function Doughnut({
 
     const colors = [
       StrokePalette["household"],
-      StrokePalette["trading"],
+      StrokePalette["trade"],
       StrokePalette["public"],
     ];
     const acc = _.reduce(
