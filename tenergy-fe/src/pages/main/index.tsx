@@ -1,7 +1,8 @@
+import { MainContainer } from "@container";
 import { WithAuth } from "@hoc";
 
 function _MainPage() {
-  return <>메인</>;
+  return <MainContainer />;
 }
 
 export const MainPage = WithAuth(_MainPage);
