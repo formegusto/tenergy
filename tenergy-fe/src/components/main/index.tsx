@@ -1,6 +1,7 @@
 import { DangerBarChart } from "@component/common";
 import { DangerChartProps } from "@component/common/types";
 import { h3, h5 } from "@styles/font";
+import DataCard from "./DataCard";
 
 export function MainComponent({ datas }: DangerChartProps) {
   return (
@@ -14,6 +15,11 @@ export function MainComponent({ datas }: DangerChartProps) {
         {(39744).toLocaleString("ko-KR")}kWh
       </h5>
       <DangerBarChart datas={datas} />
+      <div className="datacard-group-wrap flex flex-row gap-x-16">
+        <DataCard type="apt" />
+        <DataCard type="trading" />
+        <DataCard type="public" />
+      </div>
     </div>
   );
 }
