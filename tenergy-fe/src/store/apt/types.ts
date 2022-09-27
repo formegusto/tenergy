@@ -8,3 +8,11 @@ export interface APT {
 export type PriceAndUsage = {
   [key in IPart]: number;
 };
+
+export interface DetailData {
+  title: string;
+  price: number;
+  usage: number;
+  keys: string[];
+  values: number[];
+}
