@@ -84,7 +84,7 @@ routes.get(
     const colNames = [
       "groupNo",
       "count",
-      "congtribution",
+      "contribution",
       "meanUsage",
       "price",
       "err",

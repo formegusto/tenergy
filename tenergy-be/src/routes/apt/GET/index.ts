@@ -47,7 +47,7 @@ routes.get("/detail", async (req: Express.Request, res: Express.Response) => {
 
   const apartment = {
     title: "아파트",
-    prices: apt.bill,
+    price: apt.bill,
     usage: apt.usage,
     keys: ["기본요금", "전력량요금", "가구 수"],
     values: [apt.self!.basic, apt.self!.elecRate, apt.householdCount],
@@ -60,7 +60,7 @@ routes.get("/detail", async (req: Express.Request, res: Express.Response) => {
   const householdPart = {
     title: "세대",
     usage: apt.householdPart,
-    prices: apt.householdBill,
+    price: apt.householdBill,
     keys: ["1단계", "2단계", "3단계"],
     values: sumSteps,
   };
@@ -88,9 +88,12 @@ routes.get("/detail", async (req: Express.Request, res: Express.Response) => {
     values: colSteps,
   };
 
-  return res
-    .status(StatusCodes.OK)
-    .json({ apartment, householdPart, tradePart, publicPart });
+  return res.status(StatusCodes.OK).json({
+    apt: apartment,
+    household: householdPart,
+    trade: tradePart,
+    public: publicPart,
+  });
 });
 
 // chart data
