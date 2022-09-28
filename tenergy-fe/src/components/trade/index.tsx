@@ -37,7 +37,7 @@ export function TradeComponent() {
 
   return (
     <div className="trade-wrap flex flex-col">
-      <h3 className={[h3, "text-slate-900"].join(" ")}>거래 현황</h3>
+      <h3 className={[h3, "text-slate-900", "mb-3"].join(" ")}>거래 현황</h3>
       {tradeDetail && (
         <div className="card-wrap flex flex-row gap-x-8 mt-6">
           {_.map(TITLESEQ, (titleSeq, idx) => (
@@ -48,7 +48,9 @@ export function TradeComponent() {
               keys={_.map(KEYSSEQ, (key) =>
                 [SUBTITLE[key], "거래", SUBTITLEUNIT[titleSeq]].join(" ")
               )}
-              values={_.map(KEYSSEQ, (key) => tradeDetail[titleSeq][key])}
+              values={_.map(KEYSSEQ, (key) =>
+                Math.round(tradeDetail[titleSeq][key])
+              )}
             />
           ))}
         </div>

@@ -1,7 +1,8 @@
+import { PublicContainer } from "@container/public";
 import { WithAuth } from "@hoc";
 
 function _PublicPage() {
-  return <>퍼블릭</>;
+  return <PublicContainer />;
 }
 
 export const PublicPage = WithAuth(_PublicPage);

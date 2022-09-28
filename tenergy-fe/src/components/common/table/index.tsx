@@ -13,6 +13,7 @@ export const TableRow = styled.tr`
   height: 44px;
   display: flex;
   flex-direction: row;
+  margin: 0 0 10px;
 `;
 
 export const TableCol = styled.td<TableColStyleProps>`

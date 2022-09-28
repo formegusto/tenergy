@@ -11,6 +11,8 @@ const client = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      retry: 3,
+      retryDelay: 300,
     },
   },
 });

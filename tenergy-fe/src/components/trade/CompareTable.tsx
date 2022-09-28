@@ -41,7 +41,7 @@ function CompareTable() {
   }, [datas]);
 
   return compareData ? (
-    <TableWrap className="mt-12">
+    <TableWrap className="mt-12 mb-12">
       <TableHead>
         <TableRow className={[tag1, "text-slate-400"].join(" ")}>
           <TableCol width={90}>역할</TableCol>

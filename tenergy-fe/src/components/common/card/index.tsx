@@ -18,18 +18,23 @@ export function GlobalDataCard({
           {titleUnit}
         </h4>
       </div>
-      <div className="flex flex-col data-card-content px-6 py-4 box-border gap-y-1">
-        {_.map(_.zip(keys, values), ([key, value]) => (
-          <div
-            className={
-              p2 + [" content-row", "flex", "flex-row", "justify-end"].join(" ")
-            }
-          >
-            <p>{key}</p>
-            <p className="flex-1 text-end">{value!.toLocaleString("ko-KR")}</p>
-          </div>
-        ))}
-      </div>
+      {keys && values && (
+        <div className="flex flex-col data-card-content px-6 py-4 box-border gap-y-1">
+          {_.map(_.zip(keys, values), ([key, value]) => (
+            <div
+              className={
+                p2 +
+                [" content-row", "flex", "flex-row", "justify-end"].join(" ")
+              }
+            >
+              <p>{key}</p>
+              <p className="flex-1 text-end">
+                {value!.toLocaleString("ko-KR")}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
