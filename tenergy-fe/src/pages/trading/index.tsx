@@ -1,3 +1,5 @@
+import { TradeContainer } from "@container";
+
 export function TradingPage() {
-  return <>트레이드</>;
+  return <TradeContainer />;
 }

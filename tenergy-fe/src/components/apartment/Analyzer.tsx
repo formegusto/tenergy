@@ -1,6 +1,5 @@
 import { NormalChart } from "@component/common";
 import { h5, tag1 } from "@styles/font";
-import { data } from "autoprefixer";
 import _ from "lodash";
 import { AnalyzerProps } from "./types";
 

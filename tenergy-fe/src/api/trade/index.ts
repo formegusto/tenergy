@@ -1,11 +1,20 @@
 import client from "../client";
-import { ResGetTrade } from "./types";
+import { ResGetTrade, ResGetTradeDetail } from "./types";
 
 const BASEPATH = "/trade";
 
 export const getTrade = async (token: string) =>
   (
     await client.get<ResGetTrade>(`${BASEPATH}`, {
+      headers: {
+        authorization: token,
+      },
+    })
+  ).data;
+
+export const getTradeDetail = async (token: string) =>
+  (
+    await client.get<ResGetTradeDetail>(`${BASEPATH}/detail`, {
       headers: {
         authorization: token,
       },

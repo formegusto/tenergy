@@ -29,24 +29,22 @@ export function ApartmentComponent() {
 
   return (
     <div className="apartment-wrap flex flex-col">
+      <h3 className={h3 + [" text-slate-900"].join(" ")}>사용량 및 요금</h3>
       {detailData && (
-        <>
-          <h3 className={h3 + [" text-slate-900"].join(" ")}>사용량 및 요금</h3>
-          <div className="card-wrap flex flex-row gap-x-8 mt-6">
-            {_.map(TITLESEQ, (titleSeq) => (
-              <GlobalDataCard
-                title={PartToKR[titleSeq]}
-                titleValue={detailData[titleSeq].usage}
-                titleUnit="kWh"
-                keys={_.concat(detailData[titleSeq].keys, "")}
-                values={_.concat(
-                  detailData[titleSeq].values,
-                  detailData[titleSeq].price
-                )}
-              />
-            ))}
-          </div>
-        </>
+        <div className="card-wrap flex flex-row gap-x-8 mt-6">
+          {_.map(TITLESEQ, (titleSeq) => (
+            <GlobalDataCard
+              title={PartToKR[titleSeq]}
+              titleValue={detailData[titleSeq].usage}
+              titleUnit="kWh"
+              keys={_.concat(detailData[titleSeq].keys, "")}
+              values={_.concat(
+                detailData[titleSeq].values,
+                detailData[titleSeq].price
+              )}
+            />
+          ))}
+        </div>
       )}
       {analysisData && (
         <div className="analyzer">
