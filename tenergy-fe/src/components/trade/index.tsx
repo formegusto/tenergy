@@ -5,6 +5,7 @@ import { useToken } from "@hook";
 import { h3 } from "@styles/font";
 import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
+import CompareTable from "./CompareTable";
 import { TradeTitle } from "./types";
 
 const TITLESEQ: TradeDetailKey[] = ["price", "usage"];
@@ -52,6 +53,7 @@ export function TradeComponent() {
           ))}
         </div>
       )}
+      <CompareTable />
     </div>
   );
 }
