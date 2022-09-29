@@ -27,6 +27,13 @@ export function HouseholdComponent({ data }: HouseholdComponentProps) {
           titleValue={Math.abs(data.price.trade)}
         />
         <MdDragHandle size={32} className="text-slate-900" />
+        <GlobalDataCard
+          title="최종청구금액"
+          titleUnit=""
+          titleValue={Math.abs(
+            data.price.elecBill + data.price.public + data.price.trade
+          )}
+        />
       </div>
     </div>
   ) : (

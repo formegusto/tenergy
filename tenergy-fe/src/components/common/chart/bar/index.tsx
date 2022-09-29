@@ -2,7 +2,11 @@ import React from "react";
 import { DangerChartSVG, NormalChartSVG } from "./styles";
 import _ from "lodash";
 import { DangerPalette } from "../common";
-import { DangerChartProps, NormalChartProps } from "./types";
+import {
+  DangerChartProps,
+  NormalChartProps,
+  NormalChartStyleProps,
+} from "./types";
 
 const [VIEW_X, VIEW_Y] = [350, 100];
 const MAX_Y = 100;
@@ -10,7 +14,13 @@ const MAX_Y = 100;
 // const TEXT_SIZE = 7.47;
 const MARGIN_RATIO = 0.4;
 
-export function NormalChart({ datas, colors }: NormalChartProps) {
+export function NormalChart({
+  datas,
+  colors,
+  viewX,
+  viewY,
+  ...styleProps
+}: NormalChartProps & NormalChartStyleProps) {
   const refSVG = React.useRef<SVGSVGElement>(null);
 
   React.useEffect(() => {
@@ -18,8 +28,8 @@ export function NormalChart({ datas, colors }: NormalChartProps) {
       while (refSVG.current?.hasChildNodes())
         refSVG.current.removeChild(refSVG.current.firstChild!);
 
-      const margin = (VIEW_X / datas.length) * MARGIN_RATIO;
-      const strokeWidth = (VIEW_X - margin * (datas.length - 1)) / datas.length;
+      const margin = (viewX / datas.length) * MARGIN_RATIO;
+      const strokeWidth = (viewX - margin * (datas.length - 1)) / datas.length;
       const startX = strokeWidth / 2;
 
       const x: Array<number> = [startX];
@@ -62,13 +72,14 @@ export function NormalChart({ datas, colors }: NormalChartProps) {
         refSVG.current.appendChild(path);
       }
     }
-  }, [datas, colors]);
+  }, [datas, colors, viewX]);
 
   return (
     <NormalChartSVG
       ref={refSVG}
       xmlns="https://www.w3.org/2000/svg"
-      viewBox={`0 0 ${VIEW_X} ${VIEW_Y}`}
+      viewBox={`0 0 ${viewX} ${viewY}`}
+      {...styleProps}
     />
   );
 }

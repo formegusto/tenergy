@@ -27,7 +27,12 @@ function PublicDistribute({ data }: PublicDistributeProps) {
       <div className="visualization-wrap flex flex-row gap-x-12">
         <div className="flex-1 flex flex-col ">
           <p className={[tag1, "text-slate-500", "mb-12"].join(" ")}>분포도</p>
-          <NormalChart datas={data.groupCount} colors={strokeColors} />
+          <NormalChart
+            datas={data.groupCount}
+            colors={strokeColors}
+            viewX={350}
+            viewY={100}
+          />
         </div>
         <div className="flex-1 flex flex-col">
           <p className={[tag1, "text-slate-500", "mb-12"].join(" ")}>

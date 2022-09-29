@@ -8,12 +8,17 @@ export function GlobalDataCard({
   titleUnit,
   keys,
   values,
+  className,
+  isPrefix,
 }: GlobalDataCardProps) {
   return (
     <div className="data-card flex-1 bg-slate-100 shadow-md rounded-2xl text-slate-900">
       <div className="data-card-top px-6 py-4 box-border">
         <p className={h5 + [" data-card-title", "mb-1"].join(" ")}>{title}</p>
-        <h4 className={h4 + [" text-center"].join(" ")}>
+        <h4
+          className={[h4, "text-center", className ? className : ""].join(" ")}
+        >
+          {isPrefix && titleValue > 0 && "+"}
           {titleValue.toLocaleString("ko-KR")}
           {titleUnit}
         </h4>

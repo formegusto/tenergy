@@ -58,6 +58,8 @@ function Analyzer({ datas }: AnalyzerProps) {
         <NormalChart
           datas={_.map(datas, ({ value }) => value)}
           colors={_.map(colorDatas, ({ stroke }: any) => stroke)}
+          viewX={150}
+          viewY={150}
         />
       </div>
       <div className="card-wrap flex flex-col flex-1 gap-y-8">

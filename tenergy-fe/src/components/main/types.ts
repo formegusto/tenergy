@@ -1,4 +1,7 @@
-import { ResGetHouseholdInformation } from "@api/household/types";
+import {
+  ResGetHouseholdInformation,
+  ResGetHouseholdPublic,
+} from "@api/household/types";
 import { IPart } from "@component/common/types";
 
 export interface DataCardProps {
@@ -15,4 +18,8 @@ export interface MainComponentProps {
 
 export interface HouseholdComponentProps {
   data?: ResGetHouseholdInformation;
+}
+
+export interface HouseholdPublicComponentProps {
+  data?: ResGetHouseholdPublic;
 }

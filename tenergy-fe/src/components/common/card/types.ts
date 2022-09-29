@@ -4,4 +4,6 @@ export interface GlobalDataCardProps {
   titleUnit: string;
   keys?: string[];
   values?: number[];
+  className?: string;
+  isPrefix?: boolean;
 }
