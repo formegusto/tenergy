@@ -142,6 +142,7 @@ routes.get("/feedback", async (req: Express.Request, res: Express.Response) => {
     testFeedbackTarget.pat[parseInt(key)] =
       centroidsFeedbackTargets[centroidsIdx].pat[parseInt(key)];
   });
+  console.log("it's warning!", warningProposal);
 
   const beforeUsage = Math.round(
     _.sumBy(_.flatten(_.values(myFeedbackTarget.pat)), ({ value }) => value)
@@ -169,16 +170,17 @@ routes.get("/feedback", async (req: Express.Request, res: Express.Response) => {
   _.forIn(myFeedbackTarget.pat, (value, key) => {
     let myPattern = _.map(value, ({ value: v }) => v);
     let centroidPattern: number[];
-    if (key in warningProposal) {
+    if (warningProposal.includes(key)) {
       console.log(key, "warning");
 
       centroidPattern = _.map(
-        centroidsFeedbackTargets[0].pat[parseInt(key)],
+        centroidsFeedbackTargets[1].pat[parseInt(key)],
         ({ value: v }) => v
       );
     } else {
+      console.log(key, "danger");
       centroidPattern = _.map(
-        centroidsFeedbackTargets[1].pat[parseInt(key)],
+        centroidsFeedbackTargets[0].pat[parseInt(key)],
         ({ value: v }) => v
       );
     }
