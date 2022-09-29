@@ -7,7 +7,7 @@ export const RootWrap = styled.div`
   width: 100vw;
   min-width: 1440px;
 
-  height: 100vh;
+  /* height: 100vh; */
   min-height: 780px;
 `;
 

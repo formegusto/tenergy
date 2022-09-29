@@ -1,17 +1,43 @@
 import { getChart } from "@api";
-import { MainComponent } from "@component";
+import { AdminMainComponent, HouseholdMainComponent } from "@component";
 import { useToken } from "@hook";
+import { authState } from "@store/atom";
 import { useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { HouseholdContainer } from "./HouseholdContainer";
 
 export function MainContainer() {
-  const token = useToken();
-  const { data } = useQuery(["getChart", token], () => getChart(token!), {
-    enabled: token !== null,
-  });
+  const auth = useRecoilValue(authState);
 
-  return data ? (
-    <MainComponent total={data.total} datas={data.usages} />
+  return auth && auth.role === "ADMIN" ? (
+    <AdminMainContainer />
+  ) : (
+    <HouseholdMainContainer />
+  );
+}
+
+export function AdminMainContainer() {
+  const token = useToken();
+  const { data: aptData } = useQuery(
+    ["getChart", token],
+    () => getChart(token!),
+    {
+      enabled: token !== null,
+    }
+  );
+
+  return aptData ? (
+    <AdminMainComponent total={aptData.total} datas={aptData.usages} />
   ) : (
     <></>
+  );
+}
+
+export function HouseholdMainContainer() {
+  return (
+    <>
+      <HouseholdMainComponent />
+      <HouseholdContainer />
+    </>
   );
 }
