@@ -6,7 +6,7 @@ import { LineChartProps } from "./types";
 const VIEW_X = 350,
   VIEW_Y = 100;
 
-export function LineChart({ datas, colors }: LineChartProps) {
+export function LineChart({ datas, colors, viewX, viewY }: LineChartProps) {
   const refSVG = React.useRef<SVGSVGElement>(null);
 
   React.useEffect(() => {
@@ -14,9 +14,9 @@ export function LineChart({ datas, colors }: LineChartProps) {
       refSVG.current.removeChild(refSVG.current.firstChild!);
     }
 
-    const dataLength = datas.length;
+    const dataLength = datas[0].length;
 
-    const increaseX = VIEW_X / (dataLength - 1);
+    const increaseX = (viewX ? viewX : VIEW_X) / (dataLength - 1);
 
     const min = _.min(_.flatten(datas))!;
     const max = _.max(_.flatten(datas))!;
@@ -32,7 +32,7 @@ export function LineChart({ datas, colors }: LineChartProps) {
         else d.push("L");
         const xEnd = increaseX * yIdx;
         const norm = (y - min) / (max - min);
-        const yEnd = VIEW_Y * (1 - norm);
+        const yEnd = (viewY ? viewY : VIEW_Y) * (1 - norm);
 
         d.push(xEnd, yEnd);
       });
@@ -51,13 +51,13 @@ export function LineChart({ datas, colors }: LineChartProps) {
 
       refSVG.current?.appendChild(path);
     });
-  }, [datas, colors]);
+  }, [datas, colors, viewX, viewY]);
 
   return (
     <LineChartSVG
       ref={refSVG}
       xmlns="https://www.w3.org"
-      viewBox={[0, 0, VIEW_X, VIEW_Y].join(" ")}
+      viewBox={[0, 0, viewX ? viewX : VIEW_X, viewY ? viewY : VIEW_Y].join(" ")}
     />
   );
 }

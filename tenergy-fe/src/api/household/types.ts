@@ -18,3 +18,24 @@ export interface ResGetHouseholdPublic {
   my: HouseholdPublic;
   contributions: number[];
 }
+export interface BeforeAndAfter {
+  before: number;
+  after: number;
+}
+export interface MyAndCentroids {
+  my: number[];
+  centroids: number[];
+}
+
+export type FeedbackType = "day" | "time";
+export interface ResGetHouseholdFeedback {
+  type: FeedbackType;
+  size: number;
+  dangerProposal: string[];
+  warningProposal: string[];
+  price: BeforeAndAfter;
+  usage: BeforeAndAfter;
+  patterns: {
+    [key: string]: MyAndCentroids;
+  };
+}

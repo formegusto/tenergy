@@ -1,4 +1,5 @@
 import {
+  FeedbackType,
   ResGetHouseholdInformation,
   ResGetHouseholdPublic,
 } from "@api/household/types";
@@ -22,4 +23,8 @@ export interface HouseholdComponentProps {
 
 export interface HouseholdPublicComponentProps {
   data?: ResGetHouseholdPublic;
+}
+
+export interface FeedbackProps {
+  type: FeedbackType;
 }

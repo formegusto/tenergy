@@ -5,6 +5,7 @@ import { authState } from "@store/atom";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { HouseholdContainer } from "./HouseholdContainer";
+import HouseholdFeedbackContainer from "./HouseholdFeedbackContainer";
 import HouseholdPublicContainer from "./HouseholdPublicContainer";
 
 export function MainContainer() {
@@ -40,6 +41,7 @@ export function HouseholdMainContainer() {
       <HouseholdMainComponent />
       <HouseholdContainer />
       <HouseholdPublicContainer />
+      <HouseholdFeedbackContainer />
     </>
   );
 }

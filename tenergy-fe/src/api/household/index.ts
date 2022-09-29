@@ -1,5 +1,10 @@
 import client from "../client";
-import { ResGetHouseholdInformation, ResGetHouseholdPublic } from "./types";
+import {
+  FeedbackType,
+  ResGetHouseholdFeedback,
+  ResGetHouseholdInformation,
+  ResGetHouseholdPublic,
+} from "./types";
 
 const BASEPATH = "/household";
 
@@ -19,4 +24,16 @@ export const getHouseholdPublic = async (token: string) =>
         authorization: token,
       },
     })
+  ).data;
+
+export const getHouseholdFeedback = async (token: string, type: FeedbackType) =>
+  (
+    await client.get<ResGetHouseholdFeedback>(
+      `${BASEPATH}/feedback?type=${type}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    )
   ).data;
