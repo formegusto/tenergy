@@ -1,4 +1,9 @@
-import { GlobalDataCard, NormalChart, SelectedPie } from "@component/common";
+import {
+  GlobalDataCard,
+  NormalChart,
+  SelectedPie,
+  Spinner,
+} from "@component/common";
 import { h3 } from "@styles/font";
 import _ from "lodash";
 import { HouseholdPublicComponentProps } from "./types";
@@ -9,14 +14,12 @@ function HouseholdPublicComponent({ data }: HouseholdPublicComponentProps) {
         idx === data.my.group ? "stroke-cyan-400" : "stroke-slate-400"
       )
     : null;
-
-  console.log(barColors);
   return (
     <>
       <h3 className={[h3, "text-slate-900", "mt-24"].join(" ")}>
         공동설비사용요금
       </h3>
-      {data && (
+      {data ? (
         <div className="flex flex-row mt-12 gap-x-12 items-center">
           <div className="flex flex-row flex-1 gap-x-8">
             <div className="flex-1">
@@ -64,6 +67,8 @@ function HouseholdPublicComponent({ data }: HouseholdPublicComponentProps) {
             </div>
           </div>
         </div>
+      ) : (
+        <Spinner />
       )}
     </>
   );

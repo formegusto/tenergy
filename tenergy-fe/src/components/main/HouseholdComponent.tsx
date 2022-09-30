@@ -1,4 +1,4 @@
-import { DangerBarChart, GlobalDataCard } from "@component/common";
+import { DangerBarChart, GlobalDataCard, Spinner } from "@component/common";
 import { h5 } from "@styles/font";
 import { HouseholdComponentProps } from "./types";
 import { MdOutlineRemove, MdOutlineAdd, MdDragHandle } from "react-icons/md";
@@ -37,6 +37,6 @@ export function HouseholdComponent({ data }: HouseholdComponentProps) {
       </div>
     </div>
   ) : (
-    <></>
+    <Spinner />
   );
 }

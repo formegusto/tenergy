@@ -4,7 +4,7 @@ import _ from "lodash";
 import { useQuery } from "@tanstack/react-query";
 import { useToken } from "@hook";
 import { getHouseholdFeedback } from "@api";
-import { GlobalDataCard, LineChart } from "@component/common";
+import { GlobalDataCard, LineChart, Spinner } from "@component/common";
 import { DayIdxToKR } from "@util";
 
 type FeedbackLevel = "danger" | "warning" | "good";
@@ -29,7 +29,7 @@ function Feedback({ type }: FeedbackProps) {
 
   return (
     <div className="flex-1 flex flex-col">
-      {data && (
+      {data ? (
         <>
           <p className={[tag1, "mb-4", "text-slate-500"].join(" ")}>
             {type === "time" ? "시간" : "요일"}
@@ -123,6 +123,8 @@ function Feedback({ type }: FeedbackProps) {
             </div>
           </div>
         </>
+      ) : (
+        <Spinner />
       )}
     </div>
   );
