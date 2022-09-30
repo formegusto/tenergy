@@ -1,8 +1,9 @@
 export interface INavItem {
   title: string;
-  to: string;
+  to?: string;
   key?: string;
   value?: number;
+  isHousehold?: boolean;
 }
 
 export const NavItems: INavItem[] = [
@@ -13,16 +14,32 @@ export const NavItems: INavItem[] = [
   {
     title: "아파트",
     to: "/apartment",
-    value: 6439541,
   },
   {
     title: "전력거래",
     to: "/trading",
-    value: 1750500,
   },
   {
     title: "공동설비",
     to: "/public",
-    value: 2640560,
+  },
+];
+
+export const HouseholdNavItems: INavItem[] = [
+  {
+    title: "전기요금",
+    isHousehold: true,
+  },
+  {
+    title: "공동설비",
+    isHousehold: true,
+  },
+  {
+    title: "전력거래",
+    isHousehold: true,
+  },
+  {
+    title: "최종청구금액",
+    isHousehold: true,
   },
 ];

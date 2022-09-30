@@ -1,13 +1,18 @@
-import { INavItem, NavItems } from "./items";
+import { HouseholdNavItems, INavItem, NavItems } from "./items";
 import styled from "styled-components";
 import { p3 } from "@styles/font";
 import { NavLink } from "react-router-dom";
 import { NavProps } from "./types";
 
-function NavItem({ title, to, value }: INavItem) {
-  return (
+function NavItem({ title, to, value, isHousehold }: INavItem) {
+  return isHousehold ? (
+    <div className={["flex", "justify-between", "text-slate-50"].join(" ")}>
+      <p>{title}</p>
+      <p>{value && value.toLocaleString("ko-KR")}</p>
+    </div>
+  ) : (
     <NavLink
-      to={to}
+      to={to!}
       end
       className={({ isActive }) =>
         "flex justify-between " +
@@ -22,16 +27,20 @@ function NavItem({ title, to, value }: INavItem) {
   );
 }
 
-function Nav({ price }: NavProps) {
+function Nav({ price, isHousehold }: NavProps) {
   return (
     <NavWrap className="navs flex flex-col gap-y-3 mt-12">
-      {NavItems.map((item, idx) => (
-        <NavItem
-          {...item}
-          value={idx !== 0 ? price[idx - 1] : undefined}
-          key={`nav-${idx}`}
-        />
-      ))}
+      {isHousehold
+        ? HouseholdNavItems.map((item, idx) => (
+            <NavItem {...item} value={price[idx]} key={`nav-${idx}`} />
+          ))
+        : NavItems.map((item, idx) => (
+            <NavItem
+              {...item}
+              value={idx !== 0 ? price[idx - 1] : undefined}
+              key={`nav-${idx}`}
+            />
+          ))}
     </NavWrap>
   );
 }

@@ -21,3 +21,9 @@ export interface NameLabelData {
   name: string;
   value: number;
 }
+
+export type IHouseholdPart = "elecBill" | "public" | "trade" | "bill";
+
+export type IHousehold = {
+  [key in IHouseholdPart]: number;
+};
