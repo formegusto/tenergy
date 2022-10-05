@@ -59,7 +59,7 @@ function PublicDistribute({ data }: PublicDistributeProps) {
                 key={`distribute-group-${groupNo}`}
                 className={[tag1, "text-slate-600"].join(" ")}
               >
-                <TableCol width={120}>{groupNo}</TableCol>
+                <TableCol width={120}>{groupNo + 1}</TableCol>
                 <TableCol width={120}>{count}</TableCol>
                 <TableCol width={120}>
                   {Math.round(contribution * 100) / 100}
