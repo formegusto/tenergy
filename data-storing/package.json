@@ -1,0 +1,12 @@
+{
+  "name": "data-storing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx tsc && node dist"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}

@@ -3,8 +3,6 @@ import Express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import http from "http";
-
 import { init } from "@models/connect";
 import routes from "@routes";
 import errorHandler from "@routes/error";
