@@ -1,4 +1,9 @@
 import "module-alias/register";
+import "@model/connect";
+import { execAfterConnect } from "@model";
+
+execAfterConnect(async () => {});
+
 // import fs from "fs";
 // import path from "path";
 // import AppRoot from "app-root-path";
