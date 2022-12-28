@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+import { TimeMeterDataModel } from ".";
 
 export interface IMeterData {
   name: string;
@@ -10,9 +11,6 @@ export interface ITimeMeterData {
 
   time: Date;
   data: IMeterData[];
-
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export class TimeMeterData implements ITimeMeterData {
@@ -21,10 +19,11 @@ export class TimeMeterData implements ITimeMeterData {
   time!: Date;
   data!: IMeterData[];
 
-  createdAt!: Date;
-  updatedAt!: Date;
-
   constructor(model: ITimeMeterData) {
     Object.assign(this, model);
+  }
+
+  static async save(time: Date, data: IMeterData[]) {
+    await TimeMeterDataModel.create({ time, data });
   }
 }

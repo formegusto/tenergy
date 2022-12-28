@@ -8,6 +8,7 @@ const TimeMeterDataSchema = new Schema<ITimeMeterData>(
   },
   {
     collection: "TimeMeterData",
+    versionKey: false,
   }
 );
 

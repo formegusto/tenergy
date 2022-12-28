@@ -8,6 +8,7 @@ const HouseholdSchema = new Schema<IHousehold>(
   {
     timestamps: true,
     collection: "Household",
+    versionKey: false,
   }
 );
 
