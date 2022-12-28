@@ -23,6 +23,7 @@
   },
   "_moduleAliases": {
     "@lib": "dist/lib",
-    "@model": "dist/models"
+    "@model": "dist/models",
+    "@util": "dist/util"
   }
 }
