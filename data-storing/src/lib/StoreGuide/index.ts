@@ -4,6 +4,7 @@ import { arrayParallel, getTimezoneDate } from "@util";
 import { TimeDivisionKMeans } from "@lib";
 import _ from "lodash";
 import { IStoreGuide } from "./types";
+import * as model from "@model";
 
 const TIME_SLICE = 4;
 
@@ -27,6 +28,15 @@ class StoreGuide implements IStoreGuide {
         throw new Error("Error : 존재하지 않는 파일 경로 입니다.");
       throw err;
     }
+  }
+
+  // 전체 데이터 삭제 작업
+  async clean() {
+    await model.CompareModel.deleteMany({});
+    await model.EnergyTradeModel.deleteMany({});
+    await model.HouseholdModel.deleteMany({});
+    await model.TimeDivisionMemoryModel.deleteMany({});
+    await model.TimeMeterDataModel.deleteMany({});
   }
 
   // step 1. 가구 정보 저장 (가구 이름, 가구 1시간 단위 미터데이터)

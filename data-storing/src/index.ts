@@ -12,6 +12,8 @@ execAfterConnect(async () => {
     const csvName = "아파트1_2019-01.csv";
     const guide = await StoreGuide.get(csvName);
 
+    await guide.clean();
+
     await guide.step1();
     await guide.step2();
     await guide.step3();
