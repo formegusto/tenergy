@@ -1,5 +1,6 @@
 import { ResponseError } from "@common";
 import { AdminModel } from "@models";
+import { FileManager, IFileManager } from "@models/types";
 import { csvUpload } from "@mw";
 import Express from "express";
 import { StatusCodes } from "http-status-codes";
@@ -52,16 +53,17 @@ routes.post(
 
     // 모두 끝난 상태를 기준으로
     // status : PENDING, READY, STEP1, STEP2, ACTIVE
-    console.log({
+    const fileManager: IFileManager = {
       comment,
       path,
       buildingName,
       year,
       month,
       status: "PENDING",
-    });
+    };
+    const doc = await FileManager.save(fileManager);
 
-    return res.status(StatusCodes.CREATED).json();
+    return res.status(StatusCodes.CREATED).json(doc);
   }
 );
 
