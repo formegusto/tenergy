@@ -6,6 +6,7 @@ import TimeDivisionKMeans from "../TimeDivisionKMeans";
 import _ from "lodash";
 import { IStoreGuide } from "./types";
 import * as model from "@models";
+import { FileManagerModel } from "@models";
 
 const TIME_SLICE = 4;
 
@@ -38,11 +39,22 @@ class StoreGuide implements IStoreGuide {
 
   // 전체 데이터 삭제 작업
   async clean() {
+    await FileManagerModel.updateOne(
+      { status: "ACTIVE" },
+      {
+        $set: {
+          status: "PENDING",
+        },
+      }
+    );
+
     await model.CompareModel.deleteMany({});
     await model.EnergyTradeModel.deleteMany({});
     await model.HouseholdModel.deleteMany({});
     await model.TimeDivisionMemoryModel.deleteMany({});
     await model.TimeMeterDataModel.deleteMany({});
+
+    await this.fileManager.updateStatus("READY");
   }
 
   // step 1. 가구 정보 저장 (가구 이름, 가구 1시간 단위 미터데이터)

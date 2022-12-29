@@ -56,6 +56,7 @@ export class FileManager implements IFileManager {
         StatusCodes.NOT_FOUND,
         "해당 정보를 찾지 못했습니다."
       );
+
     return new FileManager(doc.toObject());
   }
 
