@@ -1,4 +1,4 @@
-import { CSVReader } from "@lib";
+import { CSVReader, EnergyTrade } from "@lib";
 import { Household, TimeMeterData } from "@model/types";
 import { arrayParallel, getTimezoneDate } from "@util";
 import { TimeDivisionKMeans } from "@lib";
@@ -72,7 +72,18 @@ class StoreGuide implements IStoreGuide {
   }
 
   // step 3. 전력 거래 Energy Trade Data Save
-  async step3() {}
+  async step3() {
+    const eTrade = await EnergyTrade.init(5);
+    for (let _ of eTrade);
+    await eTrade.save();
+
+    const analyzer = eTrade.clean();
+    console.log(analyzer);
+
+    await analyzer.save();
+
+    console.log(eTrade.results.length);
+  }
 }
 
 export default StoreGuide;

@@ -24,6 +24,7 @@
   "_moduleAliases": {
     "@lib": "dist/lib",
     "@model": "dist/models",
-    "@util": "dist/util"
+    "@util": "dist/util",
+    "@common": "dist/common"
   }
 }

@@ -14,6 +14,7 @@ execAfterConnect(async () => {
 
     await guide.step1();
     await guide.step2();
+    await guide.step3();
   } catch (err) {
     console.error(err);
   }

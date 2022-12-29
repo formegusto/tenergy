@@ -5,7 +5,8 @@
       "@lib": ["./lib"],
       "@model": ["./models"],
       "@model/*": ["./models/*"],
-      "@util": ["./util"]
+      "@util": ["./util"],
+      "@common": ["./common"]
     }
   }
 }
