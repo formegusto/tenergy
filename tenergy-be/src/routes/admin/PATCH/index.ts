@@ -1,5 +1,4 @@
-import CSVReader from "@libs/CSVReader";
-import { FileManager } from "@models/types";
+import StoreGuide from "@libs/StoreGuide";
 import Express from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -14,10 +13,7 @@ routes.put(
   async (req: Express.Request, res: Express.Response) => {
     const { id } = req.params;
 
-    const fileManager = await FileManager.getById(id);
-
-    const csvReader = await CSVReader.get(fileManager.path);
-    await fileManager.updateStatus("READY");
+    StoreGuide.recovery(id);
 
     return res.status(StatusCodes.OK).send({
       status: true,

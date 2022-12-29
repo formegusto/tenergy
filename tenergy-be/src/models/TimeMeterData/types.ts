@@ -58,4 +58,8 @@ export class TimeMeterData implements ITimeMeterData {
 
     return _.map(times, ({ time }) => time);
   }
+
+  static async save(time: Date, data: MeterData[]) {
+    await TimeMeterDataModel.create({ time, data });
+  }
 }

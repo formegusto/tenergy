@@ -2,7 +2,11 @@ import { Schema } from "mongoose";
 import _ from "lodash";
 import { BASIC, ELECRATE, NUGIN_ERR, NUGIN_STEP } from "@common";
 import { monthToSeason } from "@utils";
-import { TimeDivisionMemoryModel, TimeMeterDataModel } from "@models";
+import {
+  HouseholdModel,
+  TimeDivisionMemoryModel,
+  TimeMeterDataModel,
+} from "@models";
 
 export interface IHousehold {
   _id?: Schema.Types.ObjectId;
@@ -124,5 +128,9 @@ export class Household {
     ) as number[];
 
     return new Household(name, pat, conts);
+  }
+
+  static async save(name: string) {
+    await HouseholdModel.create({ name });
   }
 }
