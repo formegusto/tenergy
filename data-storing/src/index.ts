@@ -13,6 +13,7 @@ execAfterConnect(async () => {
     const guide = await StoreGuide.get(csvName);
 
     await guide.step1();
+    await guide.step2();
   } catch (err) {
     console.error(err);
   }

@@ -1,6 +1,7 @@
 import { CSVReader } from "@lib";
 import { Household, TimeMeterData } from "@model/types";
 import { arrayParallel, getTimezoneDate } from "@util";
+import { TimeDivisionKMeans } from "@lib";
 import _ from "lodash";
 import { IStoreGuide } from "./types";
 
@@ -61,7 +62,14 @@ class StoreGuide implements IStoreGuide {
   }
 
   // step 2. 가격 분배 TimeDivision Data Save
-  async step2() {}
+  async step2() {
+    const tdKMeans = new TimeDivisionKMeans(3);
+
+    await tdKMeans.appendData();
+    for (let _ of tdKMeans) await tdKMeans.appendData();
+
+    for (let mem of tdKMeans.memory) await mem.save();
+  }
 
   // step 3. 전력 거래 Energy Trade Data Save
   async step3() {}
