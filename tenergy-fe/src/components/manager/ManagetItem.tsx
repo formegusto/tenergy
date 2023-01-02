@@ -35,9 +35,10 @@ export function ManagerItem({
   comment,
   status,
   updatedAt,
-}: Manager) {
+  onClick,
+}: Manager & { onClick: () => void }) {
   return (
-    <Wrap>
+    <Wrap onClick={onClick}>
       <Title>{buildingName}</Title>
 
       <Title>

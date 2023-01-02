@@ -12,3 +12,6 @@ export const postManager = async (data: FormData) =>
       },
     })
   ).data;
+
+export const setNewManager = async (id: string) =>
+  (await client.put(`/admin/active/${id}`)).data;

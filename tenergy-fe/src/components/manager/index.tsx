@@ -1,4 +1,6 @@
+import { setNewManager } from "@api";
 import { Manager } from "@store/types";
+import { UseMutateFunction } from "@tanstack/react-query";
 import _ from "lodash";
 import React from "react";
 import styled from "styled-components";
@@ -8,6 +10,7 @@ import { FileManagerButton, ManagerItem } from "./ManagetItem";
 type Props = {
   manager: Manager[];
   refetch: any;
+  setManagerMutate: UseMutateFunction<any, unknown, string, unknown>;
 };
 
 export function ManagerComponent({ manager, refetch }: Props) {
@@ -17,7 +20,11 @@ export function ManagerComponent({ manager, refetch }: Props) {
     <Wrap>
       <FileManagerButton setShowInput={setShowInput} />
       {_.map(manager, (man) => (
-        <ManagerItem key={man._id} {...man} />
+        <ManagerItem
+          key={man._id}
+          {...man}
+          onClick={() => setNewManager(man._id)}
+        />
       ))}
       {showInput && <FileInput setShowInput={setShowInput} refetch={refetch} />}
     </Wrap>

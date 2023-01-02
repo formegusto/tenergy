@@ -1,9 +1,26 @@
-import { getManager } from "@api";
+import { getManager, setNewManager } from "@api";
 import { ManagerComponent } from "@component/manager";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export function ManagerContainer() {
   const { data, refetch } = useQuery(["getManagers"], getManager);
+  const { mutate: setManagerMutate } = useMutation(
+    ["setNewManager"],
+    setNewManager,
+    {
+      onSuccess: () => {
+        refetch();
+      },
+    }
+  );
 
-  return data ? <ManagerComponent manager={data} refetch={refetch} /> : <></>;
+  return data ? (
+    <ManagerComponent
+      manager={data}
+      refetch={refetch}
+      setManagerMutate={setManagerMutate}
+    />
+  ) : (
+    <></>
+  );
 }
