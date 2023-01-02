@@ -10,8 +10,7 @@ export function SideBar() {
     <SideBarWrap
       className={`fixed bg-slate-900 shadow box-border pt-12 flex flex-col items-center ${
         pathname === "/auth" ? "auth" : ""
-      }`}
-    >
+      }`}>
       {pathname === "/auth" ? <AuthComponent /> : <SimpleChart />}
     </SideBarWrap>
   );

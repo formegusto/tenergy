@@ -10,6 +10,7 @@ import Nav from "../nav";
 import { SimpleChartWrap } from "./styles";
 import _ from "lodash";
 import { IHouseholdPart } from "@store/types";
+import { useNavigate } from "react-router-dom";
 
 const NAVSEQ: IPart[] = ["apt", "trade", "public"];
 const NAVHOUSEHOLDSEQ: IHouseholdPart[] = [
@@ -20,6 +21,8 @@ const NAVHOUSEHOLDSEQ: IHouseholdPart[] = [
 ];
 
 function SimpleChart() {
+  const navigate = useNavigate();
+
   const token = useToken();
   const auth = useRecoilValue(authState);
   const [apt, setApt] = useRecoilState(aptState);
@@ -42,6 +45,11 @@ function SimpleChart() {
             <Doughnut size={150} aptMean={apt.usage} />
             <StackBar aptMean={apt.usage} />
           </SimpleChartWrap>
+          <button
+            className="bg-transparent text-white font-semibold border py-2 px-4 rounded w-4/5 mb-8 hover:text-black hover:bg-white"
+            onClick={() => navigate("/manager")}>
+            Manager
+          </button>
         </>
       ) : household ? (
         <>

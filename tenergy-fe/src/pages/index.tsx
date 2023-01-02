@@ -2,6 +2,7 @@ import { useRoutes } from "react-router-dom";
 import { ApartmentPage } from "./apartment";
 import { AuthPage } from "./auth";
 import { MainPage } from "./main";
+import { ManagerPage } from "./manager";
 import { PublicPage } from "./public";
 import { RootPage } from "./root";
 import { TradingPage } from "./trading";
@@ -31,6 +32,10 @@ function Pages() {
         {
           path: "/auth",
           element: <AuthPage />,
+        },
+        {
+          path: "/manager",
+          element: <ManagerPage />,
         },
       ],
     },
