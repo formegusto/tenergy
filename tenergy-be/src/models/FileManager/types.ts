@@ -63,4 +63,8 @@ export class FileManager implements IFileManager {
   static async save(fileManager: IFileManager): Promise<IFileManager> {
     return (await FileManagerModel.create(fileManager)).toObject();
   }
+
+  static async getList(): Promise<IFileManager[]> {
+    return await FileManagerModel.find({}).sort({ updatedAt: -1 });
+  }
 }
