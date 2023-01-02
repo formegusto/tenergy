@@ -1,19 +1,23 @@
+import { Manager } from "@store/types";
+import _ from "lodash";
 import React from "react";
 import styled from "styled-components";
 import { FileInput } from "./FileInput";
 import { FileManagerButton, ManagerItem } from "./ManagetItem";
 
-export function ManagerComponent() {
+type Props = {
+  manager: Manager[];
+};
+
+export function ManagerComponent({ manager }: Props) {
   const [showInput, setShowInput] = React.useState<boolean>(false);
 
   return (
     <Wrap>
       <FileManagerButton setShowInput={setShowInput} />
-      <ManagerItem />
-      <ManagerItem />
-      <ManagerItem />
-      <ManagerItem />
-      <ManagerItem />
+      {_.map(manager, (man) => (
+        <ManagerItem key={man._id} {...man} />
+      ))}
       {showInput && <FileInput setShowInput={setShowInput} />}
     </Wrap>
   );

@@ -1,5 +1,19 @@
 import { IPart } from "@component/common/types";
 
+export type FileStatus = "PENDING" | "READY" | "STEP1" | "STEP2" | "ACTIVE";
+
+export interface Manager {
+  _id: string;
+  buildingName: string;
+  year: number;
+  month: number;
+  comment: string;
+  path: string;
+  status: FileStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface APT {
   price: PriceAndUsage;
   usage: PriceAndUsage;

@@ -7,7 +7,8 @@ type ButtonProps = {
 export function FileInput({ setShowInput }: ButtonProps) {
   return (
     <Wrap>
-      <ModalBack onClick={() => setShowInput(false)}></ModalBack>
+      <ModalBack onClick={() => setShowInput(false)} />
+      <Title>새 파일 업로드</Title>
       <Form>
         <label
           className="block mb-2 text-sm font-medium text-gray-900"
@@ -18,11 +19,11 @@ export function FileInput({ setShowInput }: ButtonProps) {
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
           aria-describedby="file_input_help"
           id="file_input"
-          type="file"></input>
+          type="file"
+        />
         <p className="mt-1 text-sm text-gray-500" id="file_input_help">
           ex)아파트1_2019-04.csv
         </p>
-        {/* <Divide /> */}
         <label
           htmlFor="last_name"
           className="block mt-4 mb-2 text-sm font-medium text-gray-900">
@@ -53,6 +54,8 @@ export function FileInput({ setShowInput }: ButtonProps) {
   );
 }
 
+const Title = styled.h1``;
+
 const ButtonGroup = styled.div`
   align-self: flex-end;
 
@@ -71,7 +74,7 @@ const Form = styled.form`
 
   background: white;
 
-  padding: 20px 32px;
+  padding: 28px 32px;
   border-radius: 16px;
   box-shadow: 4px 4px 2px rgba(51, 51, 51, 0.4);
 

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { TbReportSearch } from "react-icons/tb";
+import { Manager } from "@store/types";
+import { FileStatusToKR, getTimezoneDate } from "@util";
 
 type ButtonProps = {
   setShowInput: (state: boolean) => void;
@@ -26,21 +28,28 @@ const ManagerWrap = styled.div`
   color: #333;
 `;
 
-export function ManagerItem() {
+export function ManagerItem({
+  buildingName,
+  year,
+  month,
+  comment,
+  status,
+  updatedAt,
+}: Manager) {
   return (
     <Wrap>
-      <Title>아파트1</Title>
+      <Title>{buildingName}</Title>
 
-      <Title>2019년 04월</Title>
+      <Title>
+        {year}년 {month}월
+      </Title>
 
       <Divide />
-      <Comment>아파트1의 2019년 4월 미터데이터 asdfasfas</Comment>
+      <Comment>{comment}</Comment>
 
-      <Status>활성</Status>
+      <Status>{FileStatusToKR[status]}</Status>
 
-      <DateText>
-        {new Date("2022-12-29T05:55:48.907+00:00").toLocaleString("ko-KR")}
-      </DateText>
+      <DateText>{new Date(updatedAt).toLocaleString("ko-KR")}</DateText>
     </Wrap>
   );
 }
