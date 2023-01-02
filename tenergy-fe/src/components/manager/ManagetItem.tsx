@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { TbReportSearch } from "react-icons/tb";
 import { Manager } from "@store/types";
-import { FileStatusToKR, getTimezoneDate } from "@util";
+import { FileStatusToKR } from "@util";
 
 type ButtonProps = {
   setShowInput: (state: boolean) => void;

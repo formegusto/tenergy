@@ -7,9 +7,10 @@ import { FileManagerButton, ManagerItem } from "./ManagetItem";
 
 type Props = {
   manager: Manager[];
+  refetch: any;
 };
 
-export function ManagerComponent({ manager }: Props) {
+export function ManagerComponent({ manager, refetch }: Props) {
   const [showInput, setShowInput] = React.useState<boolean>(false);
 
   return (
@@ -18,7 +19,7 @@ export function ManagerComponent({ manager }: Props) {
       {_.map(manager, (man) => (
         <ManagerItem key={man._id} {...man} />
       ))}
-      {showInput && <FileInput setShowInput={setShowInput} />}
+      {showInput && <FileInput setShowInput={setShowInput} refetch={refetch} />}
     </Wrap>
   );
 }

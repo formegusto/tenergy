@@ -1,15 +1,53 @@
+import { postManager } from "@api";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import styled from "styled-components";
 
-type ButtonProps = {
+type InputProps = {
   setShowInput: (state: boolean) => void;
+  refetch: any;
 };
 
-export function FileInput({ setShowInput }: ButtonProps) {
+export function FileInput({ setShowInput, refetch }: InputProps) {
+  const { mutate } = useMutation(["postManagerMutation"], postManager, {
+    onSuccess: () => {
+      refetch();
+      setShowInput(false);
+    },
+  });
+  const [comment, setComment] = React.useState<string>("");
+  const [meterData, setMeterData] = React.useState<Blob>();
+
+  React.useEffect(() => {
+    console.log(meterData);
+  }, [meterData]);
+
+  const onSubmit = React.useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (meterData) {
+        const formData = new FormData();
+        formData.append("comment", comment);
+        formData.append("meterData", meterData);
+        mutate(formData);
+      }
+    },
+    [comment, meterData, mutate]
+  );
+
+  const onChange = React.useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.name === "comment") setComment(e.target.value);
+      else setMeterData(e.target.files![0]);
+    },
+    []
+  );
+
   return (
     <Wrap>
       <ModalBack onClick={() => setShowInput(false)} />
       <Title>새 파일 업로드</Title>
-      <Form>
+      <Form onSubmit={onSubmit}>
         <label
           className="block mb-2 text-sm font-medium text-gray-900"
           htmlFor="file_input">
@@ -20,6 +58,9 @@ export function FileInput({ setShowInput }: ButtonProps) {
           aria-describedby="file_input_help"
           id="file_input"
           type="file"
+          onChange={onChange}
+          name="meterData"
+          accept=".csv"
         />
         <p className="mt-1 text-sm text-gray-500" id="file_input_help">
           ex)아파트1_2019-04.csv
@@ -35,6 +76,9 @@ export function FileInput({ setShowInput }: ButtonProps) {
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           placeholder="Comment"
           required
+          onChange={onChange}
+          name="comment"
+          value={comment}
         />
         <ButtonGroup>
           <button
