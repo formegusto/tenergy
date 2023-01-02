@@ -1,6 +1,5 @@
 import Express from "express";
 import multer from "multer";
-import path from "path";
 
 export const csvUpload: Express.RequestHandler = multer({
   storage: multer.diskStorage({
